@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jide Balogun &mdash; Editorial & Portrait Photographer</title>
+  <meta name="description" content="Visual artist and editorial photographer specializing in bold portraiture, high-fashion storytelling, and street culture." />
+  
+  <!-- Modern Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar (Matches Desktop - 2.png: 60px height, #bebebe background) -->
+  <header class="nav" id="main-nav">
+    <div class="nav-left">
+      <a href="#hero" class="nav-logo" id="nav-brand">Portfolio</a>
+    </div>
+
+    <div class="nav-right">
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn-replay" id="nav-replay-btn" title="Replay Entrance Animation" aria-label="Replay intro animation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <span>Replay</span>
+        </button>
+
+        <button class="nav-mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         Hero Section (Layer Architecture: Red BG -> Portrait -> Pixel Text -> Nav)
+         ========================================================================== -->
+    <section class="hero is-loading" id="hero">
+      <!-- Layer 0: Solid red background with clip-path wipe in -->
+      <div class="hero-bg" aria-hidden="true"></div>
+
+      <!-- Layer 1: Cut-out Portrait from Animation components -->
+      <div class="hero-portrait-stage">
+        <div class="hero-portrait-wrapper">
+          <img 
+            class="hero-portrait" 
+            src="/animation-components/JIDE9525-Recovered-removebg-preview 5.png" 
+            alt="Portrait of the photographer wearing sunglasses with a white sticker outline"
+            loading="eager"
+            id="hero-portrait-img"
+          />
+        </div>
+      </div>
+
+      <!-- Layer 2: Pixel Text ("PHOTOGRAPHER" white blocks over black shadow blocks) -->
+      <div class="hero-title-container">
+        <h1 class="hero-title" aria-label="PHOTOGRAPHER">
+          <!-- Black Shadow Layer (Offset 1 cell right) -->
+          <div class="px-layer px-layer--shadow" aria-hidden="true"></div>
+          <!-- White Block Layer -->
+          <div class="px-layer px-layer--white" aria-hidden="true"></div>
+        </h1>
+      </div>
+
+      <!-- Subtle Hero Scroll Cue -->
+      <a href="#shelf" class="hero-scroll-indicator" aria-label="Explore Selected Works">
+        <span>Explore Works</span>
+        <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </section>
+
+    <!-- ==========================================================================
+         Camera Wheel & Black Band Section (wheel-placement-spec.md)
+         ========================================================================== -->
+    <div class="band-wrap" id="band-wrap" aria-label="Camera lens focus wheel">
+      <div class="black-band" aria-hidden="true"></div>
+      <div class="wheel" id="camera-wheel" role="slider" aria-label="Camera focus wheel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+        <img class="wheel-body" src="/assets/wheel/body.png" alt="NIKKOR 26mm f/2.8 Camera Lens" draggable="false" />
+        <div class="wheel-ring" id="wheel-ring" title="Drag horizontally to rotate focus ring">
+          <div class="wheel-ridges" id="wheel-ridges"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         Section 2: "Extrude" Cards + Button (GSAP) - Matches Desktop - 3.png
+         ========================================================================== -->
+    <section class="shelf" id="shelf">
+      <div class="shelf-row">
+
+        <article class="xcard">
+          <span class="xcard-shadow" aria-hidden="true"></span>
+          <a class="xcard-face" href="#">
+            <!-- <img src="..." alt="..." /> supplied later. Plain white until then -->
+          </a>
+        </article>
+
+        <article class="xcard">
+          <span class="xcard-shadow" aria-hidden="true"></span>
+          <a class="xcard-face" href="#">
+            <!-- <img src="..." alt="..." /> supplied later. Plain white until then -->
+          </a>
+        </article>
+
+        <article class="xcard">
+          <span class="xcard-shadow" aria-hidden="true"></span>
+          <a class="xcard-face" href="#">
+            <!-- <img src="..." alt="..." /> supplied later. Plain white until then -->
+          </a>
+        </article>
+
+        <article class="xcard">
+          <span class="xcard-shadow" aria-hidden="true"></span>
+          <a class="xcard-face" href="#">
+            <!-- <img src="..." alt="..." /> supplied later. Plain white until then -->
+          </a>
+        </article>
+
+      </div>
+
+      <a class="cta" href="#">
+        <span class="cta-shadow" aria-hidden="true"></span>
+        <span class="cta-face">
+          <span class="cta-label"><!-- label text supplied from the design --></span>
+        </span>
+      </a>
+    </section>
+
+    <!-- ==========================================================================
+         About Section
+         ========================================================================== -->
+    <section class="section about-section" id="about">
+      <div class="container">
+        <span class="section-tag">Identity &amp; Vision</span>
+        <h2 class="section-heading">Framing human vitality across subcultures &amp; fashion.</h2>
+        
+        <div class="about-grid">
+          <div class="about-text-col">
+            <p class="about-content-text">
+              Jide is an editorial and portrait photographer working at the intersection of raw urban identity, contemporary fashion, and high-impact graphic visuals. His signature high-contrast lighting and sculpted sticker silhouettes turn portraiture into iconic visual emblems.
+            </p>
+            <p class="about-content-text">
+              With a background spanning Lagos, London, and New York, his frames explore the momentum of modern youth, cultural resonance, and unapologetic character. Every photograph is composed with surgical discipline and unfiltered emotion.
+            </p>
+
+            <div class="about-stats">
+              <div class="stat-item">
+                <h3>120+</h3>
+                <p>Global Shoots</p>
+              </div>
+              <div class="stat-item">
+                <h3>18</h3>
+                <p>Exhibitions</p>
+              </div>
+              <div class="stat-item">
+                <h3>9</h3>
+                <p>Global Honors</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-preview-col">
+            <div class="about-preview-card">
+              <span class="section-tag">Core Equipment</span>
+              <ul class="gear-list">
+                <li class="gear-item">
+                  <span>Hasselblad 907X 50C</span>
+                  <span>Medium Format</span>
+                </li>
+                <li class="gear-item">
+                  <span>Leica M11 &amp; 35mm Summilux</span>
+                  <span>Rangefinder</span>
+                </li>
+                <li class="gear-item">
+                  <span>Profoto B10X Plus &amp; OCF Octa</span>
+                  <span>Light Shaping</span>
+                </li>
+                <li class="gear-item">
+                  <span>Contax T2 (35mm Carl Zeiss)</span>
+                  <span>Analog Film</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Projects Section (Filterable Selected Works)
+         ========================================================================== -->
+    <section class="section projects-section" id="projects">
+      <div class="container">
+        <span class="section-tag">Selected Archive</span>
+        <h2 class="section-heading">Curated Works 2024 &ndash; 2026</h2>
+        <p class="section-desc">A selection of commissioned editorials, personal projects, and cultural portraits.</p>
+
+        <!-- Category Filters -->
+        <div class="filter-bar" role="tablist" aria-label="Portfolio filters">
+          <button class="filter-btn active" data-filter="all">All Disciplines</button>
+          <button class="filter-btn" data-filter="editorial">Editorial</button>
+          <button class="filter-btn" data-filter="portrait">Portraiture</button>
+          <button class="filter-btn" data-filter="fashion">High Fashion</button>
+          <button class="filter-btn" data-filter="street">Street &amp; Subculture</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery-grid" id="gallery-container">
+          <!-- Item 1 -->
+          <article class="gallery-card" data-category="editorial">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80" alt="Solaris Horizon Editorial" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">Editorial</span>
+                  <h3 class="gallery-title">Solaris Horizon</h3>
+                  <div class="gallery-meta">
+                    <span>Vogue International</span>
+                    <span>Paris &bull; 2025</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Item 2 -->
+          <article class="gallery-card" data-category="portrait">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80" alt="Neon Silhouette Study" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">Portraiture</span>
+                  <h3 class="gallery-title">The Kinetic Gaze</h3>
+                  <div class="gallery-meta">
+                    <span>Studio Commission</span>
+                    <span>London &bull; 2025</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Item 3 -->
+          <article class="gallery-card" data-category="fashion">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" alt="Sculptural Form Study" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">High Fashion</span>
+                  <h3 class="gallery-title">Sculpted Monoliths</h3>
+                  <div class="gallery-meta">
+                    <span>Bottega Veneta Campaign</span>
+                    <span>Milan &bull; 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Item 4 -->
+          <article class="gallery-card" data-category="street">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80" alt="Lagos Nights Street Series" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">Street &amp; Subculture</span>
+                  <h3 class="gallery-title">Island Chronicles</h3>
+                  <div class="gallery-meta">
+                    <span>Independent Series</span>
+                    <span>Lagos &bull; 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Item 5 -->
+          <article class="gallery-card" data-category="editorial">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Highsnobiety Cover Shoot" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">Editorial</span>
+                  <h3 class="gallery-title">Echoes of Tomorrow</h3>
+                  <div class="gallery-meta">
+                    <span>Highsnobiety Cover</span>
+                    <span>Berlin &bull; 2025</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Item 6 -->
+          <article class="gallery-card" data-category="portrait">
+            <div class="gallery-img-wrap">
+              <img class="gallery-img" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80" alt="Optical Realism Character Portrait" loading="lazy" />
+              <div class="gallery-overlay">
+                <div class="gallery-card-info">
+                  <span class="gallery-category">Portraiture</span>
+                  <h3 class="gallery-title">The Golden Hour Shade</h3>
+                  <div class="gallery-meta">
+                    <span>GQ Special Edition</span>
+                    <span>New York &bull; 2024</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Experience Section
+         ========================================================================== -->
+    <section class="section experience-section" id="experience">
+      <div class="container">
+        <span class="section-tag">Career Milestones</span>
+        <h2 class="section-heading">Exhibitions &amp; Selected Commissions</h2>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2025 &mdash; Solo Exhibition</div>
+            <h3 class="timeline-title">Afrofuturism &amp; The New Silhouette</h3>
+            <p class="timeline-role">Tate Modern Project Space &bull; London</p>
+            <p class="timeline-desc">A month-long solo exhibition exploring the intersection of digital pixel aesthetics, high contrast portraiture, and West African youth culture.</p>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2024 &mdash; Commission &amp; Direction</div>
+            <h3 class="timeline-title">Men of the Year Cover Portfolio</h3>
+            <p class="timeline-role">GQ Global Special Edition &bull; Paris</p>
+            <p class="timeline-desc">Photographed 8 international leaders in music, architecture, and film across cinematic location sets.</p>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">2023 &mdash; Laureate &amp; Award</div>
+            <h3 class="timeline-title">Photographer of the Year in Portraiture</h3>
+            <p class="timeline-role">Lagos International Photo Biennale</p>
+            <p class="timeline-desc">Honored with the Grand Jury Prize for the series 'The Architects of Dusk', celebrated for innovative lighting and structural framing.</p>
+          </div>
+        </div>
+
+        <!-- Client Roster -->
+        <div class="clients-wrap">
+          <h4 class="clients-title">Selected Editorial Clients &amp; Brands</h4>
+          <div class="clients-grid">
+            <div class="client-logo">VOGUE</div>
+            <div class="client-logo">GQ</div>
+            <div class="client-logo">HIGHSNOBIETY</div>
+            <div class="client-logo">DAZED</div>
+            <div class="client-logo">NIKE LAB</div>
+            <div class="client-logo">SONY MUSIC</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         Contact Section
+         ========================================================================== -->
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <span class="section-tag">Inquiries &amp; Bookings</span>
+        <h2 class="section-heading">Let's create something timeless.</h2>
+        
+        <div class="contact-grid">
+          <div class="contact-info">
+            <div class="info-box">
+              <h4>Direct Inquiries</h4>
+              <a href="mailto:studio@jidebalogun.photo">studio@jidebalogun.photo</a>
+            </div>
+
+            <div class="info-box">
+              <h4>Studio Location</h4>
+              <p>Lagos Island &bull; Shoreditch, London</p>
+            </div>
+
+            <div class="info-box">
+              <h4>Representation</h4>
+              <p>MAVENS Creative Agency &bull; Worldwide</p>
+            </div>
+
+            <div class="info-box">
+              <h4>Social &amp; Follow</h4>
+              <div class="social-links">
+                <a href="#contact" class="social-link" title="Instagram" aria-label="Instagram">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+                <a href="#contact" class="social-link" title="Behance" aria-label="Behance">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-4v2h4v-2z"></path><path d="M9 10H5v2h4v-2z"></path><path d="M5 6h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5V6z"></path><path d="M5 11h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5v-6z"></path></svg>
+                </a>
+                <a href="#contact" class="social-link" title="Twitter / X" aria-label="Twitter">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Commission Booking Form -->
+          <form class="contact-form" id="contact-form">
+            <div class="form-group">
+              <label class="form-label" for="client-name">Your Name / Agency</label>
+              <input class="form-input" type="text" id="client-name" placeholder="e.g. Maya Lin" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="client-email">Email Address</label>
+              <input class="form-input" type="email" id="client-email" placeholder="maya@agency.com" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="project-type">Project Scope</label>
+              <select class="form-select" id="project-type">
+                <option value="editorial">Magazine Editorial</option>
+                <option value="campaign">Brand / Fashion Campaign</option>
+                <option value="portrait">Private Portraiture</option>
+                <option value="exhibition">Exhibition / Curation</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="client-message">Project Description &amp; Proposed Dates</label>
+              <textarea class="form-textarea" id="client-message" placeholder="Provide details regarding creative direction, locations, and timeline..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Dispatch Inquiry &rarr;</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       Footer
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Jide Balogun Photography. All Rights Reserved.</p>
+      <button class="footer-back-to-top" id="back-to-top">
+        <span>Back to Top</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Fullscreen Gallery Viewing -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Fullscreen Image View">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">&times;</button>
+    <div class="lightbox-content">
+      <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

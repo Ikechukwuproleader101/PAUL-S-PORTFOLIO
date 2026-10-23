@@ -232,16 +232,18 @@ body {
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
-  padding: 0 clamp(10px, 2.5vw, 40px) clamp(16px, 4vh, 44px);
+  padding: 0 clamp(10px, 2.5vw, 40px) 0;     /* flush at bottom, level with the hero image */
   width: 100%;
 }
+
 
 .hero-title {
   position: relative;
   width: min(97vw, 1380px);
   /* The word is 47 blocks wide + 1 block for shadow = 48 columns by 5 rows */
-  aspect-ratio: 48 / 5.1;
+  aspect-ratio: 48 / 5;
   display: block;
+  margin: 0;
 }
 
 .px-layer {
@@ -303,22 +305,7 @@ body {
 
 /* Hero Controls Badge */
 .hero-scroll-indicator {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  pointer-events: auto;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
+  display: none;
 }
 
 .hero-scroll-indicator:hover {
@@ -385,21 +372,126 @@ body {
 }
 
 /* ==========================================================================
-   Camera Wheel & Black Band Section (wheel-placement-spec.md)
+   Camera Wheel & Calibration Scale (wheel-placement-spec 2.md)
    ========================================================================== */
 .band-wrap {
   position: relative;
   width: 100%;
+  height: clamp(65px, 6.2vw, 92px);
   background-color: var(--color-red);
   overflow: visible;                        /* allows hanging wheel portion without clipping */
   z-index: 10;
+  display: flex;
+  align-items: center;
+  margin-top: clamp(32px, 4.5vw, 68px);     /* moved downward from photographer text */
 }
 
-.black-band {
-  width: 100%;
-  height: clamp(54px, 5.9vw, 85px);
-  background-color: #000000;
+/* Seamless red background bridge into the hero section (prevents exposing dark background) */
+.band-wrap::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: clamp(34px, 4.7vw, 70px);
+  background-color: var(--color-red);
+  pointer-events: none;
+}
+
+/* Scale viewport & clipping */
+.scale-viewport {
   position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;                         /* hard clip, no fade at end caps */
+}
+
+.scale-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* White end caps at both edges */
+.cap {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: clamp(30px, 3.0vw, 44px);
+  background-color: #ffffff;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 1px;
+}
+
+.cap--left {
+  left: 0;
+}
+
+.cap--right {
+  right: 0;
+}
+
+/* Individual tick units */
+.scale-tick-unit {
+  position: relative;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scale-bar {
+  width: 2px;
+  background-color: #1a1a1a;
+  border-radius: 1px;
+}
+
+.scale-tick-unit.is-minor .scale-bar {
+  height: clamp(10px, 1.0vw, 15px);
+}
+
+.scale-tick-unit.is-major.is-top .scale-bar {
+  height: clamp(16px, 1.5vw, 22px);
+  transform: translateY(-3px);
+}
+
+.scale-tick-unit.is-major.is-bottom .scale-bar {
+  height: clamp(16px, 1.5vw, 22px);
+  transform: translateY(3px);
+}
+
+/* Scale numbers */
+.scale-num {
+  position: absolute;
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(9px, 0.8vw, 12px);
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.scale-num--top {
+  top: clamp(6px, 0.6vw, 11px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.scale-num--bottom {
+  bottom: clamp(6px, 0.6vw, 11px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .wheel {
@@ -409,7 +501,7 @@ body {
   transform: translateX(-50%);
   width: clamp(160px, 20.14vw, 290px);
   aspect-ratio: 728 / 327;
-  z-index: 2;
+  z-index: 3;
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;                      /* allow vertical scrolling, capture horizontal drag */
@@ -600,216 +692,353 @@ body {
 }
 
 /* ==========================================================================
-   About Section
+   About Section: "GET TO KNOW ME" (about-section-spec.md)
    ========================================================================== */
-.about-section {
-  background-color: var(--color-bg-dark);
-  border-top: 1px solid var(--color-border);
-}
+.about {
+  --paper: #ffffff;
+  --red: var(--color-red, #b50c0c);
+  --ink: #111111;
+  --strip: #1f1f1f;
+  --strip-text: #707070;
+  --tilt: 4deg;
 
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 90px);
-  align-items: center;
-  margin-top: 40px;
-}
-
-.about-content-text {
-  font-size: clamp(16px, 1.2vw, 19px);
-  line-height: 1.7;
-  color: #cccccc;
-  margin-bottom: 32px;
-}
-
-.about-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 40px;
-  padding-top: 32px;
-  border-top: 1px solid var(--color-border);
-}
-
-.stat-item h3 {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 3.5vw, 48px);
-  color: #ffffff;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.stat-item p {
-  font-size: 13px;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.about-preview-card {
   position: relative;
-  background: var(--color-bg-surface);
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  padding: 24px;
+  overflow: hidden;                 /* clips the card at the right edge */
+  background: var(--paper);
+  padding: 7vw 0;                   /* match the design's vertical spacing */
+  min-height: 62vw;                 /* match the design's section height */
 }
 
-.gear-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
+/* ---------- Left: label + paragraph ---------- */
+.about-copy {
+  position: relative;
+  z-index: 1;
+  margin-left: 9.5vw;
+  width: 33vw;
 }
 
-.gear-item {
+.about-label {
+  margin: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.2s ease;
+  width: 100%;
+  height: 5.8vw;
+  padding-inline: 1.6vw;
+  background: var(--red);
+  color: #ffffff;
+  font-family: var(--font-nav);
+  font-weight: 700;
+  font-size: clamp(18px, 2.7vw, 40px);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  overflow: hidden;                 /* masks the text for the entrance animation */
 }
 
-.gear-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateX(4px);
+.about-label-text {
+  display: inline-block;
+  line-height: 1;
 }
 
-.gear-item span:first-child {
-  font-weight: 500;
-  color: #fff;
+.about-text {
+  margin: 3.8vw 0 0;
+  color: var(--ink);
+  font-family: var(--font-nav);
+  font-size: clamp(16px, 2.4vw, 34px);
+  line-height: 1.3;
+  text-align: left;
 }
 
-.gear-item span:last-child {
-  color: var(--color-red-light);
-  font-family: var(--font-mono);
-  font-size: 13px;
+/* ---------- Right: the tilted card ---------- */
+.about-card {
+  position: absolute;
+  left: 60vw;
+  top: 4vw;                         /* match the design */
+  display: flex;
+  width: 52vw;                      /* wide enough to run past the right edge */
+  height: 43vw;
+  transform: rotate(var(--tilt));
+  transform-origin: 0% 50%;
+  overflow: hidden;
+}
+
+.about-strip {
+  position: relative;
+  flex: 0 0 6.2vw;
+  background: var(--strip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-strip-text {
+  writing-mode: vertical-rl;        /* runs along the strip */
+  transform: rotate(180deg);        /* bottom to top */
+  color: var(--strip-text);
+  font-family: var(--font-nav);
+  font-size: clamp(10px, 1.4vw, 22px);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  display: flex;
+  gap: 2vw;
+  user-select: none;
+}
+
+.about-photo {
+  position: relative;
+  flex: 1;
+  background: var(--red);
+  overflow: hidden;
+}
+
+.about-photo img {
+  position: absolute;
+  bottom: 0;                        /* bottom-aligned, cropped by the card's edge */
+  left: 50%;
+  height: 88%;
+  width: auto;
+  transform: translateX(-50%);
+  filter: grayscale(100%) contrast(1.05);
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Responsive fallback (Spec Section 7) */
+@media (max-width: 900px) {
+  .about {
+    padding: 12vw 0 16vw;
+    min-height: 0;
+  }
+
+  .about-copy {
+    margin-inline: 6vw;
+    width: auto;
+  }
+
+  .about-label {
+    height: 14vw;
+    padding-inline: 4vw;
+    font-size: clamp(16px, 5vw, 24px);
+  }
+
+  .about-text {
+    margin-top: 6vw;
+    font-size: clamp(16px, 4.4vw, 22px);
+  }
+
+  .about-card {
+    position: relative;
+    left: 14vw;                     /* still runs past the right edge */
+    top: 0;
+    margin-top: 14vw;
+    width: 100vw;
+    height: 88vw;
+  }
+
+  .about-strip {
+    flex-basis: 12vw;
+  }
 }
 
 /* ==========================================================================
-   Projects / Selected Works Section
+   Section 5: Camera + Project Cards Section (camera-cards-section-spec.md)
+   Matches Screenshot 2026-10-22 164755.png
    ========================================================================== */
-.projects-section {
-  background-color: var(--color-bg-surface);
-}
-
-.filter-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 36px 0 48px;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  padding: 8px 20px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-btn:hover {
-  color: #ffffff;
-  border-color: var(--color-border-hover);
-}
-
-.filter-btn.active {
-  background: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
-  font-weight: 600;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 30px;
-}
-
-.gallery-card {
+.cc {
+  --paper: #ffffff;
+  --card-bg: #d9d9d9;
+  --ink: #111111;
   position: relative;
-  border-radius: 14px;
   overflow: hidden;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-  group: pointer;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.2s ease;
-}
-
-.gallery-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.gallery-img-wrap {
-  position: relative;
+  background: var(--paper);
+  min-height: 72.7vw;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background-color: #121212;
 }
 
-.gallery-img {
+/* ---------- Camera ---------- */
+.camera {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 56.5vw;
+  max-width: 815px;
+  z-index: 1;
+}
+
+.camera-rise {
+  transform-origin: 0% 100%;
+}
+
+.camera-stack {
+  position: relative;
+  transform-origin: 0% 100%;
+}
+
+.camera-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.camera-wheel {
+  position: absolute;
+  left: var(--px, 0%);
+  top: var(--py, 0%);
+  width: var(--pw, 0%);
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.camera-wheel svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+}
+
+.camera-part {
+  position: absolute;
+  left: var(--px, 0%);
+  top: var(--py, 0%);
+  width: var(--pw, 0%);
+  aspect-ratio: 1;
+}
+
+.camera-part-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+}
+
+/* ---------- Card pile ---------- */
+.cluster {
+  position: absolute;
+  left: 41.3vw;
+  top: 21vw;
+  width: 53vw;
+  aspect-ratio: 765 / 620;
+  z-index: 2;
+}
+
+.pcard {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  width: var(--w);
+  height: var(--h);
+  z-index: var(--z);
+  display: block;
+  text-decoration: none;
+}
+
+.pcard-face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease;
+}
+
+.pcard-face img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.gallery-card:hover .gallery-img {
-  transform: scale(1.06);
-}
-
-.gallery-overlay {
+/* ---------- Focus brackets (animation only) ---------- */
+.af {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
-  display: flex;
-  align-items: flex-end;
-  padding: 24px;
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
+  z-index: 5;
+  left: 0.7vw;
+  top: 8.7vw;
+  width: 31vw;
+  height: 16vw;
+  pointer-events: none;
+  visibility: hidden;
 }
 
-.gallery-card-info {
-  width: 100%;
+.af i {
+  position: absolute;
+  width: 1.9vw;
+  height: 1.9vw;
+  border: 3px solid var(--ink);
 }
 
-.gallery-category {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-red-light);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 4px;
+.af i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+.af i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+.af i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+.af i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+
+.cc.is-in .af {
+  display: none;
 }
 
-.gallery-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 6px;
+/* ---------- Pre-animation: no flash before the script runs ---------- */
+.js .cc:not(.is-ready) .pcard,
+.js .cc:not(.is-ready) .camera {
+  visibility: hidden;
 }
 
-.gallery-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: var(--color-text-muted);
+/* ---------- Interaction: Cards (Section 6) ---------- */
+@media (hover: hover) {
+  .cc.is-in .pcard:hover {
+    z-index: 99 !important;
+  }
+  .cc.is-in .pcard:hover .pcard-face {
+    transform: translate(-10px, -10px);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.cc.is-in .pcard:focus-visible {
+  z-index: 99 !important;
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.cc.is-in .pcard:focus-visible .pcard-face {
+  transform: translate(-10px, -10px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc * {
+    transition: none !important;
+  }
+}
+
+/* ---------- Responsive (Section 7) ---------- */
+@media (max-width: 900px) {
+  .cc {
+    min-height: 0;
+    padding-bottom: 12vw;
+  }
+  .camera {
+    position: relative;
+    width: 92vw;
+    margin-top: 8vw;
+  }
+  .cluster {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 90vw;
+    margin: 6vw auto 0;
+  }
+  .af {
+    left: 1vw;
+    top: 12vw;
+    width: 56vw;
+    height: 28vw;
+  }
 }
 
 /* ==========================================================================
@@ -1152,12 +1381,8 @@ body {
    Responsive Adaptations
    ========================================================================== */
 @media (max-width: 992px) {
-  .about-grid, .contact-grid {
+  .contact-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .about-stats {
-    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -1184,14 +1409,6 @@ body {
     display: block;
   }
   
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .about-stats {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
   
   .hero-portrait-wrapper {
     height: 75%;

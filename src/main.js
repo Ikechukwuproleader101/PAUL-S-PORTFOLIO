@@ -2,9 +2,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Draggable } from 'gsap/Draggable';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
+import { SplitText } from 'gsap/SplitText';
 import { LETTERS, TARGET_WORD } from './letters.js';
+import { createWheel } from './createWheel.js';
 
-gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin);
+gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin, SplitText);
 
 let masterTimeline = null;
 let idleTween = null;
@@ -220,15 +222,37 @@ async function init() {
   // Setup matchMedia for reduced motion and animations
   const mm = gsap.matchMedia();
 
+  let wheelScaleCleanup = null;
+  let aboutCleanup = null;
+  let cameraCardsCleanup = null;
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     playEntrance();
     initShelf();
-    initWheel();
+    wheelScaleCleanup = initWheelScale();
+    aboutCleanup = initAbout();
+    cameraCardsCleanup = initCameraCards();
   });
 
   mm.add('(prefers-reduced-motion: reduce)', () => {
+    if (wheelScaleCleanup) wheelScaleCleanup();
+    if (aboutCleanup) aboutCleanup();
+    if (cameraCardsCleanup) cameraCardsCleanup();
     gsap.set(['.hero-bg', '.hero-portrait', '.px', '.nav'], { clearProps: 'all' });
     document.querySelector('.shelf')?.classList.add('is-in');
+    gsap.set(['.about-label', '.about-label-text', '.about-card', '.about-strip-text'], { clearProps: 'all' });
+    const cameraRoot = document.querySelector('.cc');
+    if (cameraRoot) {
+      buildWheels(cameraRoot);
+      cameraRoot.classList.add('is-ready', 'is-in');
+    }
+    // Reduced motion: wheel and scale stay static in place
+    const viewport = document.querySelector('.scale-viewport');
+    const track = document.querySelector('.scale-track');
+    if (viewport && track) {
+      buildTrack(track, viewport.offsetWidth);
+      const q = (TICK - ((viewport.offsetWidth / 2) % TICK)) % TICK;
+      gsap.set(track, { x: -q });
+    }
   });
 
   // Replay Button handlers
@@ -321,75 +345,341 @@ function initShelf() {
 }
 
 // ==========================================================================
-// 6. Camera Wheel Focus Ring (wheel-placement-spec.md Section 5B)
-// Seamless repeating ridges draggable with GSAP Inertia
+// 6. Camera Wheel + Calibration Scale (wheel-placement-spec 2.md)
+// Dragging the wheel slides the ridges AND the calibration scale in sync
 // ==========================================================================
-function initWheel() {
-  const ring = document.querySelector('.wheel-ring');
-  const ridges = document.querySelector('.wheel-ridges');
-  const wheel = document.querySelector('.wheel');
-  if (!ring || !ridges) return;
+const MODE = 'loop';              // 'loop' | 'range'
+const TICK = 24;                  // px between two ticks. Read from design
+const TICKS_PER_PERIOD = 24;      // 6 major intervals * 4 ticks = 24 ticks (0, 15, 30, 45, 60, 75)
+const PERIOD = TICK * TICKS_PER_PERIOD;
+const RIDGE_TILE = 148;           // rendered width of ONE repeat of the ridge strip in px
+const RIDGE_RATIO = 1;            // how far ridges move per px of drag
 
-  // Natural aspect ratio of ridges.png: 148 / 80
-  const TILE_W = 148;
-  const TILE_H = 80;
+function buildTrack(track, viewportWidth) {
+  const steps = [
+    { num: 0, pos: 'top' },
+    { num: 15, pos: 'bottom' },
+    { num: 30, pos: 'top' },
+    { num: 45, pos: 'bottom' },
+    { num: 60, pos: 'top' },
+    { num: 75, pos: 'bottom' },
+  ];
 
-  let tile = (ridges.offsetHeight || 30) * (TILE_W / TILE_H);
-  let wrap = gsap.utils.wrap(0, tile);
-
-  function updateTile() {
-    if (ridges.offsetHeight > 0) {
-      tile = ridges.offsetHeight * (TILE_W / TILE_H);
-      wrap = gsap.utils.wrap(0, tile);
+  let periodHTML = '';
+  steps.forEach((step) => {
+    // 1 Major tick with number
+    periodHTML += `
+      <div class="scale-tick-unit is-major is-${step.pos}">
+        <span class="scale-num scale-num--${step.pos}">${step.num}</span>
+        <div class="scale-bar"></div>
+      </div>
+    `;
+    // 3 Minor ticks
+    for (let i = 0; i < 3; i++) {
+      periodHTML += `
+        <div class="scale-tick-unit is-minor">
+          <div class="scale-bar"></div>
+        </div>
+      `;
     }
+  });
+
+  if (MODE === 'range') {
+    track.innerHTML = periodHTML;
+  } else {
+    const copies = Math.ceil(viewportWidth / PERIOD) + 2;
+    track.innerHTML = periodHTML.repeat(copies);
   }
-  window.addEventListener('resize', updateTile);
+}
 
-  // Invisible proxy element tracks the drag physics and inertia
-  const proxy = document.createElement('div');
-  proxy.style.cssText = 'position: absolute; opacity: 0; pointer-events: none; z-index: -1;';
-  document.body.appendChild(proxy);
+function initWheelScale() {
+  const viewport = document.querySelector('.scale-viewport');
+  const track    = document.querySelector('.scale-track');
+  const ring     = document.querySelector('.wheel-ring');
+  const ridges   = document.querySelector('.wheel-ridges');
+  const wheel    = document.querySelector('.wheel');
 
-  function update() {
-    const curX = gsap.getProperty(proxy, 'x');
-    ridges.style.backgroundPositionX = wrap(curX) + 'px';
+  if (!viewport || !track || !ring || !ridges) return () => {};
 
+  const V = viewport.offsetWidth || window.innerWidth;
+  buildTrack(track, V);
+
+  // Phase offset so a tick sits exactly under the lens at rest (x = 0)
+  const q = (TICK - ((V / 2) % TICK)) % TICK;
+
+  const wrapScale = gsap.utils.wrap(-PERIOD, 0);
+  const wrapRidge = gsap.utils.wrap(0, RIDGE_TILE);
+
+  function render(x) {
+    ridges.style.backgroundPositionX = wrapRidge(x * RIDGE_RATIO) + 'px';
+    gsap.set(track, { x: (MODE === 'loop' ? wrapScale(x) : x) - q });
     if (wheel) {
-      const normVal = Math.round((((curX % 1000) + 1000) % 1000) / 10);
+      const normVal = Math.round((((x % 1000) + 1000) % 1000) / 10);
       wheel.setAttribute('aria-valuenow', String(normVal));
     }
   }
 
-  Draggable.create(proxy, {
+  const proxy = document.createElement('div');
+  proxy.style.cssText = 'position: absolute; opacity: 0; pointer-events: none; z-index: -1;';
+  document.body.appendChild(proxy);
+
+  const config = {
     trigger: [ring, wheel],
     type: 'x',
     inertia: true,
-    resistance: 0.15,
-    edgeResistance: 0,
-    onDrag: update,
-    onThrowUpdate: update,
-  });
+    snap: (v) => Math.round(v / TICK) * TICK,    // settle on the nearest tick
+    onDrag: function () { render(this.x); },
+    onThrowUpdate: function () { render(this.x); },
+  };
 
-  // Keyboard accessibility: Left / Right arrow keys turn the wheel
-  if (wheel) {
-    wheel.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        const delta = e.key === 'ArrowRight' ? 30 : -30;
-        const curX = gsap.getProperty(proxy, 'x') || 0;
-        gsap.to(proxy, {
-          x: curX + delta,
-          duration: 0.35,
-          ease: 'power2.out',
-          onUpdate: update,
-        });
-      }
+  if (MODE === 'range') {
+    const rangeWidth = (TICKS_PER_PERIOD - 1) * TICK;
+    config.bounds = { minX: -rangeWidth, maxX: 0 };
+    config.edgeResistance = 0.85;
+  }
+
+  const drag = Draggable.create(proxy, config)[0];
+  render(0);
+
+  // Keyboard support: arrow keys move one tick
+  function onKeyDown(e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const dir = e.key === 'ArrowRight' ? 1 : -1;
+    gsap.to(proxy, {
+      x: '+=' + dir * TICK,
+      duration: 0.3,
+      ease: 'power2.out',
+      onUpdate() {
+        drag.update();
+        render(drag.x);
+      },
     });
   }
+
+  ring.addEventListener('keydown', onKeyDown);
+  if (wheel) wheel.addEventListener('keydown', onKeyDown);
+
+  // Resize handler
+  function onResize() {
+    const newV = viewport.offsetWidth || window.innerWidth;
+    buildTrack(track, newV);
+    const newQ = (TICK - ((newV / 2) % TICK)) % TICK;
+    gsap.set(track, { x: (MODE === 'loop' ? wrapScale(drag.x) : drag.x) - newQ });
+  }
+  window.addEventListener('resize', onResize);
+
+  return () => {
+    drag.kill();
+    proxy.remove();
+    ring.removeEventListener('keydown', onKeyDown);
+    if (wheel) wheel.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('resize', onResize);
+  };
 }
 
 // ==========================================================================
-// 7. Website Interactive Features
+// 6. About Section: "GET TO KNOW ME" Animation (about-section-spec.md)
+// ==========================================================================
+function initAbout() {
+  const root = document.querySelector('.about');
+  if (!root) return () => {};
+
+  const aboutText = root.querySelector('.about-text');
+  if (!aboutText) return () => {};
+
+  // Split paragraph into masked lines
+  const split = SplitText.create(aboutText, {
+    type: 'lines',
+    mask: 'lines',
+  });
+
+  const tl = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    scrollTrigger: { trigger: root, start: 'top 65%', once: true },
+  });
+
+  tl.from('.about-label', { scaleX: 0, transformOrigin: '0% 50%', duration: 0.6, ease: 'power4.inOut' }, 0)
+    .from('.about-label-text', { yPercent: 110, duration: 0.5 }, 0.3)
+    .from(split.lines, { yPercent: 110, duration: 0.8, stagger: 0.06 }, 0.45)
+    .from('.about-card', {
+      x: '30vw',
+      rotation: 14,                  // lands on CSS tilt (4deg); starts 10deg further over
+      duration: 1.1,
+      ease: 'back.out(1.4)',
+    }, 0.2)
+    .from('.about-strip-text', {
+      clipPath: 'inset(0% 0% 100% 0%)',
+      duration: 0.8,
+      ease: 'power2.inOut',
+    }, 1.0);
+
+  // Resize handler to re-split text on width changes
+  let resizeTimer = null;
+  const onResize = () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      split.revert();
+      split.split();
+    }, 250);
+  };
+  window.addEventListener('resize', onResize);
+
+  return () => {
+    window.removeEventListener('resize', onResize);
+    split.revert();
+    tl.kill();
+  };
+}
+
+// ==========================================================================
+// 7. Camera + Project Cards Section (camera-cards-section-spec.md & camera-wheels-and-cards-fix.md)
+// "Take the Shot, Throw the Prints", Rotating SVG Wheels & Flash Fix
+// Matches Screenshot 2026-10-22 164755.png
+// ==========================================================================
+function buildWheels(root) {
+  root.querySelectorAll('.camera-wheel').forEach((slot) => {
+    slot.innerHTML = '';
+    const d = slot.dataset;
+    slot.appendChild(createWheel({
+      teeth: +d.teeth || 48,
+      ticks: +d.ticks || 60,
+      palette: d.palette || 'chrome',
+      numerals: d.numerals ? d.numerals.split(',') : [],
+    }));
+  });
+}
+
+function initCameraCards() {
+  const root = document.querySelector('.cc');
+  if (!root) return () => {};
+
+  buildWheels(root);
+  const wheels = gsap.utils.toArray('.camera-wheel svg', root);
+  let spins = [];
+
+  const rise   = root.querySelector('.camera-rise');
+  const stack  = root.querySelector('.camera-stack');
+  const af     = root.querySelector('.af');
+  const cards  = gsap.utils.toArray('.pcard', root)
+    .sort((a, b) => (+a.dataset.z) - (+b.dataset.z)); // back to front order
+  const photos = cards.map((c) => c.querySelector('img')).filter(Boolean);
+
+  let started = false;
+
+  // Starting state: cards start beyond right edge, camera offset below
+  function setStart() {
+    if (started) return; // Never reset once entrance has begun (Fix Part B2)
+    gsap.set(rise, { yPercent: 28, rotation: -3 });
+    gsap.set(cards, {
+      x: (i, el) => window.innerWidth - el.getBoundingClientRect().left + 60,
+      rotation: () => gsap.utils.random(-10, 10),
+      scale: 1.08,
+    });
+    gsap.set(photos, { clipPath: 'inset(100% 0% 0% 0%)' });
+    gsap.set(af, { autoAlpha: 0 });
+  }
+
+  setStart();
+  ScrollTrigger.addEventListener('refreshInit', setStart);
+  root.classList.add('is-ready');
+
+  // Rotating camera wheels: continuous slow spin, starting from rest at shutter click
+  function startSpin() {
+    spins = wheels.map((svg) => {
+      const slot = svg.parentElement;
+      const secs = +slot.dataset.speed || 40; // seconds per full turn
+      const dir  = +slot.dataset.dir   || 1;  // 1 clockwise, -1 counter-clockwise
+      const t = gsap.to(svg, { rotation: 360 * dir, duration: secs, ease: 'none', repeat: -1 });
+      t.timeScale(0);
+      gsap.to(t, { timeScale: 1, duration: 2.5, ease: 'power2.in' }); // eases up from rest
+      return t;
+    });
+
+    // Pause while section is off screen, resume when it returns
+    ScrollTrigger.create({
+      trigger: root,
+      start: 'top bottom',
+      end: 'bottom top',
+      onToggle: (self) => spins.forEach((t) => t.paused(!self.isActive)),
+    });
+  }
+
+  const tl = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    scrollTrigger: { trigger: root, start: 'top 60%', once: true },
+    onStart() {
+      started = true; // Lock cards in place: nothing resets them
+      ScrollTrigger.removeEventListener('refreshInit', setStart);
+    },
+    onComplete() {
+      // Hand control back to CSS so hover works normally (wheels NOT in clearProps)
+      gsap.set([rise, stack, cards, photos, af], { clearProps: 'all' });
+      root.classList.add('is-in');
+      enableCameraParallax(root);
+    },
+  });
+
+  // 1. Camera rises into frame
+  tl.to(rise, { yPercent: 0, rotation: 0, duration: 1.2, ease: 'power4.out' }, 0);
+
+  // 2. Focus brackets lock onto the lens hood
+  tl.fromTo(af, { scale: 1.8, autoAlpha: 0 },
+                { scale: 1, autoAlpha: 1, duration: 0.45, ease: 'power4.inOut' }, 0.9);
+
+  // 3. The click, which kicks the camera and starts the wheels turning
+  tl.to(stack, { scale: 1.01, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 1.35);
+  tl.add(startSpin, 1.35);
+  tl.to(af, { autoAlpha: 0, duration: 0.15, ease: 'none' }, 1.8);
+
+  // 4. Cards are thrown in, back to front
+  tl.to(cards, {
+    x: 0,
+    rotation: 0,
+    scale: 1,
+    duration: 0.8,
+    ease: 'power4.out',
+    stagger: 0.06,
+  }, 1.35);
+
+  // 5. Photos are exposed with a hard wipe
+  tl.to(photos, {
+    clipPath: 'inset(0% 0% 0% 0%)',
+    duration: 0.5,
+    ease: 'power2.inOut',
+    stagger: 0.06,
+  }, 2.0);
+
+  return () => {
+    ScrollTrigger.removeEventListener('refreshInit', setStart);
+    spins.forEach((t) => t.kill());
+    tl.kill();
+  };
+}
+
+// Subtle mouse parallax (desktop hover only)
+function enableCameraParallax(root) {
+  if (!window.matchMedia('(hover: hover)').matches) return;
+
+  const camera = root.querySelector('.camera');
+  const cluster = root.querySelector('.cluster');
+  if (!camera || !cluster) return;
+
+  const cx = gsap.quickTo(camera, 'x', { duration: 0.8, ease: 'power3' });
+  const cy = gsap.quickTo(camera, 'y', { duration: 0.8, ease: 'power3' });
+  const kx = gsap.quickTo(cluster, 'x', { duration: 0.8, ease: 'power3' });
+  const ky = gsap.quickTo(cluster, 'y', { duration: 0.8, ease: 'power3' });
+
+  root.addEventListener('pointermove', (e) => {
+    const nx = e.clientX / window.innerWidth - 0.5;
+    const ny = e.clientY / window.innerHeight - 0.5;
+    cx(nx * 16); cy(ny * 10);
+    kx(nx * -12); ky(ny * -8);
+  });
+}
+
+// ==========================================================================
+// 8. Website Interactive Features
 // ==========================================================================
 function setupWebsiteInteractions() {
   // Mobile Nav Toggle
@@ -406,56 +696,6 @@ function setupWebsiteInteractions() {
     });
   }
 
-  // Gallery Filtering
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const galleryCards = document.querySelectorAll('.gallery-card');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-      galleryCards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.style.display = 'block';
-          gsap.fromTo(card, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.35 });
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-
-  // Lightbox Modal
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxCaption = document.getElementById('lightbox-caption');
-  const lightboxClose = document.getElementById('lightbox-close');
-
-  if (lightbox && lightboxImg && lightboxClose) {
-    galleryCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const img = card.querySelector('.gallery-img');
-        const title = card.querySelector('.gallery-title')?.innerText || '';
-        const category = card.querySelector('.gallery-category')?.innerText || '';
-        
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightboxCaption.innerHTML = `<strong>${title}</strong> &mdash; <span>${category}</span>`;
-        lightbox.classList.add('active');
-      });
-    });
-
-    const closeLightbox = () => lightbox.classList.remove('active');
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeLightbox();
-    });
-  }
 
   // Contact Form Submission Mock
   const contactForm = document.getElementById('contact-form');

@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jide Balogun &mdash; Editorial & Portrait Photographer</title>
-  <meta name="description" content="Visual artist and editorial photographer specializing in bold portraiture, high-fashion storytelling, and street culture." />
-  
+  <title>Paul Ugochukwu &mdash; Editorial & Portrait Photographer</title>
+  <meta name="description"
+    content="Visual artist and editorial photographer specializing in bold portraiture, high-fashion storytelling, and street culture." />
+
   <!-- Modern Typography from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
-  
-  <script type="module" crossorigin src="/assets/index-B0aMnTJx.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-B1-d6BMO.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap"
+    rel="stylesheet">
+
+  <script>document.documentElement.classList.add("js");</script>
+  <script type="module" crossorigin src="/assets/index-CFaT8QSP.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-D6lQFt2L.css">
 </head>
+
 <body>
 
   <!-- Navigation Bar (Matches Desktop - 2.png: 60px height, #bebebe background) -->
@@ -25,14 +31,15 @@
     <div class="nav-right">
       <ul class="nav-links" id="nav-menu">
         <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="#projects" class="nav-link">Projects</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
         <li><a href="#experience" class="nav-link">Experience</a></li>
       </ul>
 
       <div class="nav-actions">
-        <button class="btn-replay" id="nav-replay-btn" title="Replay Entrance Animation" aria-label="Replay intro animation">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button class="btn-replay" id="nav-replay-btn" title="Replay Entrance Animation"
+          aria-label="Replay intro animation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
             <polyline points="23 4 23 10 17 10"></polyline>
             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
           </svg>
@@ -61,13 +68,9 @@
       <!-- Layer 1: Cut-out Portrait from Animation components -->
       <div class="hero-portrait-stage">
         <div class="hero-portrait-wrapper">
-          <img 
-            class="hero-portrait" 
-            src="/animation-components/JIDE9525-Recovered-removebg-preview 5.png" 
-            alt="Portrait of the photographer wearing sunglasses with a white sticker outline"
-            loading="eager"
-            id="hero-portrait-img"
-          />
+          <img class="hero-portrait" src="/animation-components/JIDE9525-Recovered-removebg-preview 5.png"
+            alt="Portrait of the photographer wearing sunglasses with a white sticker outline" loading="eager"
+            id="hero-portrait-img" />
         </div>
       </div>
 
@@ -81,23 +84,24 @@
         </h1>
       </div>
 
-      <!-- Subtle Hero Scroll Cue -->
-      <a href="#shelf" class="hero-scroll-indicator" aria-label="Explore Selected Works">
-        <span>Explore Works</span>
-        <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </a>
     </section>
 
     <!-- ==========================================================================
-         Camera Wheel & Black Band Section (wheel-placement-spec.md)
+         Camera Wheel & Calibration Scale (wheel-placement-spec 2.md)
          ========================================================================== -->
-    <div class="band-wrap" id="band-wrap" aria-label="Camera lens focus wheel">
-      <div class="black-band" aria-hidden="true"></div>
-      <div class="wheel" id="camera-wheel" role="slider" aria-label="Camera focus wheel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+    <div class="band-wrap" id="band-wrap" aria-label="Camera calibration scale and focus wheel">
+      <div class="scale-viewport" id="scale-viewport">
+        <div class="scale-track" id="scale-track">
+          <!-- Populated dynamically by buildTrack to ensure seamless looping -->
+        </div>
+      </div>
+      <span class="cap cap--left" aria-hidden="true"></span>
+      <span class="cap cap--right" aria-hidden="true"></span>
+
+      <div class="wheel" id="camera-wheel">
         <img class="wheel-body" src="/assets/wheel/body.png" alt="NIKKOR 26mm f/2.8 Camera Lens" draggable="false" />
-        <div class="wheel-ring" id="wheel-ring" title="Drag horizontally to rotate focus ring">
+        <div class="wheel-ring" id="wheel-ring" tabindex="0" aria-label="Turn the ring to move the scale" role="slider"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
           <div class="wheel-ridges" id="wheel-ridges"></div>
         </div>
       </div>
@@ -148,187 +152,143 @@
     </section>
 
     <!-- ==========================================================================
-         About Section
+         About Section: "GET TO KNOW ME" (about-section-spec.md)
          ========================================================================== -->
-    <section class="section about-section" id="about">
-      <div class="container">
-        <span class="section-tag">Identity &amp; Vision</span>
-        <h2 class="section-heading">Framing human vitality across subcultures &amp; fashion.</h2>
-        
-        <div class="about-grid">
-          <div class="about-text-col">
-            <p class="about-content-text">
-              Jide is an editorial and portrait photographer working at the intersection of raw urban identity, contemporary fashion, and high-impact graphic visuals. His signature high-contrast lighting and sculpted sticker silhouettes turn portraiture into iconic visual emblems.
-            </p>
-            <p class="about-content-text">
-              With a background spanning Lagos, London, and New York, his frames explore the momentum of modern youth, cultural resonance, and unapologetic character. Every photograph is composed with surgical discipline and unfiltered emotion.
-            </p>
+    <section class="about" id="about">
+      <div class="about-copy">
+        <h2 class="about-label"><span class="about-label-text">GET TO KNOW ME</span></h2>
+        <p class="about-text">Why me? Why not me?<br>For most of my life I seat<br>and ask my self the<br>questions, Why
+          me? Need I<br>remind you that before<br>reaching this point in self<br>pity has there been series<br>of
+          unwanted results which<br>you might call failure. I<br>often Imagine how the<br>world could be so cruel to</p>
+      </div>
 
-            <div class="about-stats">
-              <div class="stat-item">
-                <h3>120+</h3>
-                <p>Global Shoots</p>
-              </div>
-              <div class="stat-item">
-                <h3>18</h3>
-                <p>Exhibitions</p>
-              </div>
-              <div class="stat-item">
-                <h3>9</h3>
-                <p>Global Honors</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="about-preview-col">
-            <div class="about-preview-card">
-              <span class="section-tag">Core Equipment</span>
-              <ul class="gear-list">
-                <li class="gear-item">
-                  <span>Hasselblad 907X 50C</span>
-                  <span>Medium Format</span>
-                </li>
-                <li class="gear-item">
-                  <span>Leica M11 &amp; 35mm Summilux</span>
-                  <span>Rangefinder</span>
-                </li>
-                <li class="gear-item">
-                  <span>Profoto B10X Plus &amp; OCF Octa</span>
-                  <span>Light Shaping</span>
-                </li>
-                <li class="gear-item">
-                  <span>Contax T2 (35mm Carl Zeiss)</span>
-                  <span>Analog Film</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+      <div class="about-card">
+        <div class="about-strip">
+          <span class="about-strip-text" aria-hidden="true"><span>paul</span><span>Nmaobodo</span></span>
+        </div>
+        <div class="about-photo">
+          <img src="/assets/about/portrait.png" alt="Portrait of Paul Nmaobodo" loading="lazy" />
         </div>
       </div>
     </section>
 
     <!-- ==========================================================================
-         Projects Section (Filterable Selected Works)
+         Section 5: Camera + Project Cards Section (GSAP)
+         Matches Screenshot 2026-10-22 164755.png & camera-cards-section-spec.md
          ========================================================================== -->
-    <section class="section projects-section" id="projects">
-      <div class="container">
-        <span class="section-tag">Selected Archive</span>
-        <h2 class="section-heading">Curated Works 2024 &ndash; 2026</h2>
-        <p class="section-desc">A selection of commissioned editorials, personal projects, and cultural portraits.</p>
+    <section class="cc" id="camera-section" aria-label="Camera and works showcase">
+      <div class="camera">
+        <div class="camera-rise">
+          <div class="camera-stack">
+            <img class="camera-img" src="/assets/camera/camera-lens.png"
+              alt="Vintage Leica Rangefinder Camera with Summarex Lens" loading="lazy" />
 
-        <!-- Category Filters -->
-        <div class="filter-bar" role="tablist" aria-label="Portfolio filters">
-          <button class="filter-btn active" data-filter="all">All Disciplines</button>
-          <button class="filter-btn" data-filter="editorial">Editorial</button>
-          <button class="filter-btn" data-filter="portrait">Portraiture</button>
-          <button class="filter-btn" data-filter="fashion">High Fashion</button>
-          <button class="filter-btn" data-filter="street">Street &amp; Subculture</button>
+            <!-- Rotating Camera Wheels (camera-wheels-and-cards-fix.md) -->
+            <div class="camera-wheel" data-speed="60" data-dir="1" data-teeth="60" data-ticks="60"
+              data-palette="chrome" data-numerals="5,10,15,20,25,30,35"
+              style="--px: 76.8%; --py: 77.6%; --pw: 18.4%;" aria-hidden="true"></div>
+
+            <div class="camera-wheel" data-speed="36" data-dir="-1" data-teeth="36" data-ticks="40"
+              data-palette="chrome" data-numerals="1,2,4,8,15,30,60,125,250,500"
+              style="--px: 57.1%; --py: 80.5%; --pw: 12.3%;" aria-hidden="true"></div>
+
+            <div class="camera-wheel" data-speed="22" data-dir="1" data-teeth="24" data-ticks="24"
+              data-palette="black"
+              style="--px: 71.4%; --py: 85.5%; --pw: 5.9%;" aria-hidden="true"></div>
+          </div>
         </div>
+      </div>
 
-        <!-- Gallery Grid -->
-        <div class="gallery-grid" id="gallery-container">
-          <!-- Item 1 -->
-          <article class="gallery-card" data-category="editorial">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=900&q=80" alt="Solaris Horizon Editorial" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">Editorial</span>
-                  <h3 class="gallery-title">Solaris Horizon</h3>
-                  <div class="gallery-meta">
-                    <span>Vogue International</span>
-                    <span>Paris &bull; 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
+      <!-- Focus brackets (animation only) -->
+      <div class="af" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-          <!-- Item 2 -->
-          <article class="gallery-card" data-category="portrait">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80" alt="Neon Silhouette Study" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">Portraiture</span>
-                  <h3 class="gallery-title">The Kinetic Gaze</h3>
-                  <div class="gallery-meta">
-                    <span>Studio Commission</span>
-                    <span>London &bull; 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
+      <!-- 14 Project Cards Pile in exact stacking order -->
+      <div class="cluster" aria-label="Project photograph cards">
+        <!-- Card 01: Top Center Back -->
+        <a class="pcard" href="#experience" style="--l: 44.0%; --t: 0.0%; --w: 30.2%; --h: 14.4%; --z: 1;" data-z="1"
+          aria-label="Project Card 01">
+          <span class="pcard-face"></span>
+        </a>
 
-          <!-- Item 3 -->
-          <article class="gallery-card" data-category="fashion">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" alt="Sculptural Form Study" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">High Fashion</span>
-                  <h3 class="gallery-title">Sculpted Monoliths</h3>
-                  <div class="gallery-meta">
-                    <span>Bottega Veneta Campaign</span>
-                    <span>Milan &bull; 2024</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
+        <!-- Card 02: Upper Far-Right -->
+        <a class="pcard" href="#experience" style="--l: 80.4%; --t: 14.4%; --w: 19.6%; --h: 38.7%; --z: 2;" data-z="2"
+          aria-label="Project Card 02">
+          <span class="pcard-face"></span>
+        </a>
 
-          <!-- Item 4 -->
-          <article class="gallery-card" data-category="street">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80" alt="Lagos Nights Street Series" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">Street &amp; Subculture</span>
-                  <h3 class="gallery-title">Island Chronicles</h3>
-                  <div class="gallery-meta">
-                    <span>Independent Series</span>
-                    <span>Lagos &bull; 2024</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
+        <!-- Card 03: Upper Right Overlap -->
+        <a class="pcard" href="#experience" style="--l: 63.1%; --t: 15.5%; --w: 17.8%; --h: 39.2%; --z: 3;" data-z="3"
+          aria-label="Project Card 03">
+          <span class="pcard-face"></span>
+        </a>
 
-          <!-- Item 5 -->
-          <article class="gallery-card" data-category="editorial">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80" alt="Highsnobiety Cover Shoot" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">Editorial</span>
-                  <h3 class="gallery-title">Echoes of Tomorrow</h3>
-                  <div class="gallery-meta">
-                    <span>Highsnobiety Cover</span>
-                    <span>Berlin &bull; 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
+        <!-- Card 04: Upper Center -->
+        <a class="pcard" href="#experience" style="--l: 32.9%; --t: 15.5%; --w: 30.2%; --h: 39.2%; --z: 4;" data-z="4"
+          aria-label="Project Card 04">
+          <span class="pcard-face"></span>
+        </a>
 
-          <!-- Item 6 -->
-          <article class="gallery-card" data-category="portrait">
-            <div class="gallery-img-wrap">
-              <img class="gallery-img" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80" alt="Optical Realism Character Portrait" loading="lazy" />
-              <div class="gallery-overlay">
-                <div class="gallery-card-info">
-                  <span class="gallery-category">Portraiture</span>
-                  <h3 class="gallery-title">The Golden Hour Shade</h3>
-                  <div class="gallery-meta">
-                    <span>GQ Special Edition</span>
-                    <span>New York &bull; 2024</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
+        <!-- Card 05: Studio Photo Card (Upper Left) -->
+        <a class="pcard" href="#experience" style="--l: 1.8%; --t: 13.3%; --w: 30.7%; --h: 39.8%; --z: 5;" data-z="5"
+          aria-label="Darkroom Print Study">
+          <span class="pcard-face">
+            <img src="/assets/camera/photo-sample.png" alt="Darkroom Print Study" />
+          </span>
+        </a>
+
+        <!-- Card 06: Upper Left Inner Accent -->
+        <a class="pcard" href="#experience" style="--l: 20.9%; --t: 19.3%; --w: 11.1%; --h: 19.3%; --z: 6;" data-z="6"
+          aria-label="Project Card 06">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 07: Middle Right -->
+        <a class="pcard" href="#experience" style="--l: 76.0%; --t: 28.7%; --w: 19.6%; --h: 39.2%; --z: 7;" data-z="7"
+          aria-label="Project Card 07">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 08: Center Middle -->
+        <a class="pcard" href="#experience" style="--l: 33.8%; --t: 34.3%; --w: 29.3%; --h: 33.7%; --z: 8;" data-z="8"
+          aria-label="Project Card 08">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 09: Lower Left -->
+        <a class="pcard" href="#experience" style="--l: 0.0%; --t: 53.0%; --w: 30.7%; --h: 39.2%; --z: 9;" data-z="9"
+          aria-label="Project Card 09">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 10: Center Lower Mid -->
+        <a class="pcard" href="#experience" style="--l: 16.4%; --t: 66.3%; --w: 23.1%; --h: 27.1%; --z: 10;" data-z="10"
+          aria-label="Project Card 10">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 11: Center Left Front -->
+        <a class="pcard" href="#experience" style="--l: 7.6%; --t: 27.1%; --w: 32.0%; --h: 39.2%; --z: 11;" data-z="11"
+          aria-label="Project Card 11">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 12: Bottom Right -->
+        <a class="pcard" href="#experience" style="--l: 69.8%; --t: 68.0%; --w: 20.4%; --h: 30.9%; --z: 12;" data-z="12"
+          aria-label="Project Card 12">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 13: Lower Center -->
+        <a class="pcard" href="#experience" style="--l: 39.6%; --t: 54.7%; --w: 30.2%; --h: 44.2%; --z: 13;" data-z="13"
+          aria-label="Project Card 13">
+          <span class="pcard-face"></span>
+        </a>
+
+        <!-- Card 14: Bottom Center-Right -->
+        <a class="pcard" href="#experience" style="--l: 55.6%; --t: 68.0%; --w: 30.2%; --h: 32.0%; --z: 14;" data-z="14"
+          aria-label="Project Card 14">
+          <span class="pcard-face"></span>
+        </a>
       </div>
     </section>
 
@@ -339,14 +299,15 @@
       <div class="container">
         <span class="section-tag">Career Milestones</span>
         <h2 class="section-heading">Exhibitions &amp; Selected Commissions</h2>
-        
+
         <div class="timeline">
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div class="timeline-year">2025 &mdash; Solo Exhibition</div>
             <h3 class="timeline-title">Afrofuturism &amp; The New Silhouette</h3>
             <p class="timeline-role">Tate Modern Project Space &bull; London</p>
-            <p class="timeline-desc">A month-long solo exhibition exploring the intersection of digital pixel aesthetics, high contrast portraiture, and West African youth culture.</p>
+            <p class="timeline-desc">A month-long solo exhibition exploring the intersection of digital pixel
+              aesthetics, high contrast portraiture, and West African youth culture.</p>
           </div>
 
           <div class="timeline-item">
@@ -354,7 +315,8 @@
             <div class="timeline-year">2024 &mdash; Commission &amp; Direction</div>
             <h3 class="timeline-title">Men of the Year Cover Portfolio</h3>
             <p class="timeline-role">GQ Global Special Edition &bull; Paris</p>
-            <p class="timeline-desc">Photographed 8 international leaders in music, architecture, and film across cinematic location sets.</p>
+            <p class="timeline-desc">Photographed 8 international leaders in music, architecture, and film across
+              cinematic location sets.</p>
           </div>
 
           <div class="timeline-item">
@@ -362,7 +324,8 @@
             <div class="timeline-year">2023 &mdash; Laureate &amp; Award</div>
             <h3 class="timeline-title">Photographer of the Year in Portraiture</h3>
             <p class="timeline-role">Lagos International Photo Biennale</p>
-            <p class="timeline-desc">Honored with the Grand Jury Prize for the series 'The Architects of Dusk', celebrated for innovative lighting and structural framing.</p>
+            <p class="timeline-desc">Honored with the Grand Jury Prize for the series 'The Architects of Dusk',
+              celebrated for innovative lighting and structural framing.</p>
           </div>
         </div>
 
@@ -388,7 +351,7 @@
       <div class="container">
         <span class="section-tag">Inquiries &amp; Bookings</span>
         <h2 class="section-heading">Let's create something timeless.</h2>
-        
+
         <div class="contact-grid">
           <div class="contact-info">
             <div class="info-box">
@@ -410,13 +373,25 @@
               <h4>Social &amp; Follow</h4>
               <div class="social-links">
                 <a href="#contact" class="social-link" title="Instagram" aria-label="Instagram">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
                 </a>
                 <a href="#contact" class="social-link" title="Behance" aria-label="Behance">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-4v2h4v-2z"></path><path d="M9 10H5v2h4v-2z"></path><path d="M5 6h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5V6z"></path><path d="M5 11h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5v-6z"></path></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 10h-4v2h4v-2z"></path>
+                    <path d="M9 10H5v2h4v-2z"></path>
+                    <path d="M5 6h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H5V6z"></path>
+                    <path d="M5 11h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5v-6z"></path>
+                  </svg>
                 </a>
                 <a href="#contact" class="social-link" title="Twitter / X" aria-label="Twitter">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l11.733 16h4.267l-11.733 -16z"></path><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -446,7 +421,9 @@
 
             <div class="form-group">
               <label class="form-label" for="client-message">Project Description &amp; Proposed Dates</label>
-              <textarea class="form-textarea" id="client-message" placeholder="Provide details regarding creative direction, locations, and timeline..." required></textarea>
+              <textarea class="form-textarea" id="client-message"
+                placeholder="Provide details regarding creative direction, locations, and timeline..."
+                required></textarea>
             </div>
 
             <button type="submit" class="btn-submit">Dispatch Inquiry &rarr;</button>
@@ -481,4 +458,5 @@
   </div>
 
 </body>
+
 </html>

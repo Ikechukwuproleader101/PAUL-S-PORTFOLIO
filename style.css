@@ -848,13 +848,12 @@ body {
   --paper: #ffffff;
   --card-bg: #d9d9d9;
   --card-border: rgba(0, 0, 0, 0.35);
-  --ink: #111111;
+  --ink: #ffffff;
   position: relative;
   overflow: hidden;
-  background: var(--paper);
+  background: var(--color-red, #b50c0c);
   min-height: 72.7vw;
   width: 100%;
-  border-top: clamp(8px, 0.8vw, 14px) solid var(--color-red, #b50c0c);
 }
 
 /* ---------- Camera ---------- */
@@ -1053,270 +1052,82 @@ body {
 }
 
 /* ==========================================================================
-   Experience Section
+   Footer Spec: "Print Run" (GSAP)
+   Matches Desktop - 8.png & footer-spec.md
    ========================================================================== */
-.experience-section {
-  background-color: var(--color-bg-dark);
-}
+.foot {
+  --red: #b50c0c;
+  --paper: #ffffff;
+  --ink: #000000;
 
-.timeline {
-  margin-top: 48px;
-  border-left: 2px solid rgba(255, 255, 255, 0.1);
-  padding-left: 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
-}
-
-.timeline-item {
   position: relative;
+  overflow: hidden;
+  background: var(--paper);
+  min-height: max(100svh, 71.1vw);
 }
 
-.timeline-dot {
+/* ---------- Red zone ---------- */
+.foot-red {
   position: absolute;
-  left: -43px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--color-red);
-  border: 2px solid var(--color-bg-dark);
+  left: 0; right: 0; bottom: 0;
+  height: 21.1vw;
+  background: var(--red);
+  transform-origin: 50% 100%;
 }
 
-.timeline-year {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--color-red-light);
-  margin-bottom: 6px;
+/* ---------- Title ---------- */
+.foot-title {
+  position: absolute;
+  left: 3.5vw;
+  width: 90.6vw;
+  bottom: 18.3vw;
+  margin: 0;
 }
+.foot-title svg { display: block; width: 100%; height: auto; overflow: visible; }
 
-.timeline-title {
-  font-size: 22px;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 8px;
-}
-
-.timeline-role {
-  font-size: 15px;
-  color: var(--color-text-muted);
-  margin-bottom: 12px;
-}
-
-.timeline-desc {
-  font-size: 15px;
-  color: #b0b0b0;
-  max-width: 720px;
-  line-height: 1.6;
-}
-
-/* Client Logo Grid */
-.clients-wrap {
-  margin-top: 70px;
-  padding-top: 50px;
-  border-top: 1px solid var(--color-border);
-}
-
-.clients-title {
-  font-size: 14px;
-  font-family: var(--font-mono);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 24px;
-}
-
-.clients-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 20px;
+/* ---------- Barcode + caption ---------- */
+.foot-code {
+  position: absolute;
+  left: 50%;
+  bottom: 2.4vw;
+  transform: translateX(-50%);
+  width: 50.9vw;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-}
-
-.client-logo {
-  padding: 16px 24px;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #888888;
-  transition: all 0.2s ease;
-}
-
-.client-logo:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-/* ==========================================================================
-   Contact Section
-   ========================================================================== */
-.contact-section {
-  background-color: var(--color-bg-surface);
-  border-top: 1px solid var(--color-border);
-}
-
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 80px);
-  margin-top: 48px;
-}
-
-.contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.info-box h4 {
-  font-size: 13px;
-  font-family: var(--font-mono);
-  color: var(--color-red-light);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
-}
-
-.info-box p, .info-box a {
-  font-size: 20px;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.info-box a:hover {
-  color: var(--color-red-light);
-}
-
-.social-links {
-  display: flex;
-  gap: 16px;
-  margin-top: 8px;
-}
-
-.social-link {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.social-link:hover {
-  background: var(--color-red);
-  border-color: var(--color-red);
-  transform: translateY(-3px);
-}
-
-.contact-form {
-  background: var(--color-bg-dark);
-  padding: clamp(24px, 4vw, 40px);
-  border-radius: 16px;
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #cccccc;
-}
-
-.form-input, .form-textarea, .form-select {
-  width: 100%;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  color: #ffffff;
-  font-family: var(--font-nav);
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.form-input:focus, .form-textarea:focus, .form-select:focus {
-  border-color: var(--color-red-light);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.form-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.btn-submit {
-  background: var(--color-red);
-  color: #ffffff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+}
+.barcode { display: block; width: 100%; height: auto; overflow: visible; }
+.scan    { visibility: hidden; }                       /* only visible during the scan */
+
+.foot-cap {
+  margin: 0.7vw 0 0;
+  padding-left: 0.85em;                                /* balances the trailing letter-spacing */
+  color: var(--ink);
+  font-family: 'Space Mono', ui-monospace, monospace;
+  font-weight: 300;
+  font-size: clamp(14px, 2.8vw, 40px);
+  letter-spacing: 0.85em;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.btn-submit:hover {
-  background: var(--color-red-light);
-  transform: translateY(-2px);
-}
+/* ---------- First paint: nothing flashes (only when JavaScript is available) ---------- */
+.js .foot[data-entrance="pending"] .foot-red,
+.js .foot[data-entrance="pending"] .foot-title,
+.js .foot[data-entrance="pending"] .foot-code { visibility: hidden; }
 
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.footer {
-  background-color: var(--color-bg-dark);
-  border-top: 1px solid var(--color-border);
-  padding: 40px clamp(20px, 5vw, 80px);
-}
+/* ---------- Final lock: once landed, nothing can hide the footer again ---------- */
+.foot[data-entrance="done"] .foot-red,
+.foot[data-entrance="done"] .foot-title,
+.foot[data-entrance="done"] .foot-code { visibility: visible !important; }
 
-.footer-content {
-  max-width: 1320px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-size: 14px;
-  color: var(--color-text-muted);
-}
-
-.footer-back-to-top {
-  background: none;
-  border: none;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  transition: color 0.2s ease;
-}
-
-.footer-back-to-top:hover {
-  color: #ffffff;
+/* Responsive rule for caption at narrow widths */
+@media (max-width: 500px) {
+  .foot-cap {
+    letter-spacing: 0.6em;
+    padding-left: 0.6em;
+  }
 }
 
 /* ==========================================================================

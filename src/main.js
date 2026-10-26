@@ -225,18 +225,21 @@ async function init() {
   let wheelScaleCleanup = null;
   let aboutCleanup = null;
   let cameraCardsCleanup = null;
+  let footerCleanup = null;
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     playEntrance();
     initShelf();
     wheelScaleCleanup = initWheelScale();
     aboutCleanup = initAbout();
     cameraCardsCleanup = initCameraCards();
+    footerCleanup = initFooter();
   });
 
   mm.add('(prefers-reduced-motion: reduce)', () => {
     if (wheelScaleCleanup) wheelScaleCleanup();
     if (aboutCleanup) aboutCleanup();
     if (cameraCardsCleanup) cameraCardsCleanup();
+    if (footerCleanup) footerCleanup();
     gsap.set(['.hero-bg', '.hero-portrait', '.px', '.nav'], { clearProps: 'all' });
     document.querySelector('.shelf')?.classList.add('is-in');
     gsap.set(['.about-label', '.about-label-text', '.about-card', '.about-strip-text'], { clearProps: 'all' });
@@ -244,6 +247,10 @@ async function init() {
     if (cameraRoot) {
       buildWheels(cameraRoot);
       cameraRoot.classList.add('is-ready', 'is-in');
+    }
+    const foot = document.querySelector('.foot');
+    if (foot) {
+      foot.dataset.entrance = 'done';
     }
     // Reduced motion: wheel and scale stay static in place
     const viewport = document.querySelector('.scale-viewport');
@@ -684,7 +691,120 @@ function enableCameraParallax(root) {
 }
 
 // ==========================================================================
-// 8. Website Interactive Features
+// 8. Footer Spec: "Print Run" (GSAP)
+// Matches Desktop - 8.png & footer-spec.md
+// ==========================================================================
+// Final offset of the white layer, from the design file (SVG units)
+const FRONT_OFFSET = { x: 30, y: -10 };
+
+export function initFooter() {
+  const root = document.querySelector('.foot');
+  if (!root || root.dataset.entrance === 'done') return () => {};   // never re-run a finished footer
+
+  const red    = root.querySelector('.foot-red');
+  const glyphs = gsap.utils.toArray('.glyph', root);
+  const fronts = gsap.utils.toArray('.front', root);
+  const bars   = gsap.utils.toArray('.bar', root);
+  const scan   = root.querySelector('.scan');
+  const code   = root.querySelector('.foot-code');
+  const barcodeSvg = root.querySelector('.barcode');
+  const vb     = barcodeSvg ? barcodeSvg.viewBox.baseVal : { width: 734 };
+  const capEl  = root.querySelector('.foot-cap');
+  const split  = capEl ? SplitText.create(capEl, { type: 'chars' }) : { chars: [], revert: () => {} };
+  const timers = [];
+  let scanning = false;
+
+  // ---- Start state: applied ONCE. No measuring, nothing re-runs on resize ----
+  gsap.set(red,    { scaleY: 0 });
+  gsap.set(glyphs, { scaleY: 0, transformOrigin: '50% 100%' });
+  gsap.set(fronts, { x: -FRONT_OFFSET.x, y: -FRONT_OFFSET.y });   // sits exactly on the black layer
+  gsap.set(bars,   { scaleY: 0, transformOrigin: '50% 100%' });
+  if (split.chars && split.chars.length) {
+    gsap.set(split.chars, { autoAlpha: 0 });
+  }
+  root.dataset.entrance = 'ready';
+
+  function runScan() {
+    if (scanning) return;
+    scanning = true;
+    gsap.fromTo(scan,
+      { x: 0, autoAlpha: 1 },
+      {
+        x: vb.width,
+        duration: 0.9,
+        ease: 'power2.inOut',
+        onComplete() {
+          gsap.set(scan, { autoAlpha: 0 });
+          scanning = false;
+        }
+      });
+  }
+
+  function finish() {
+    if (root.dataset.entrance === 'done') return;
+    tl.kill();
+    gsap.set([red, glyphs, fronts, bars, scan], { clearProps: 'all' });
+    split.revert();
+    root.dataset.entrance = 'done';
+    enableInteraction();
+  }
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' }, onComplete: finish });
+
+  tl.to(red,    { scaleY: 1, duration: 0.8, ease: 'power4.inOut' }, 0)
+    .to(glyphs, { scaleY: 1, duration: 0.6, ease: 'steps(8)', stagger: 0.07 }, 0.5)
+    .to(fronts, { x: 0, y: 0, duration: 0.6, ease: 'back.out(2.2)', stagger: 0.07 }, 1.3)
+    .to(bars,   { scaleY: 1, duration: 0.25, ease: 'power2.out', stagger: { amount: 0.7 } }, 2.0);
+
+  if (split.chars && split.chars.length) {
+    tl.to(split.chars, { autoAlpha: 1, duration: 0.01, stagger: 0.05 }, 2.5);
+  }
+  tl.add(runScan, 3.0);
+
+  function play() {
+    if (root.dataset.entrance !== 'ready') return;
+    root.dataset.entrance = 'playing';
+    io.disconnect();
+    tl.play();
+    timers.push(setTimeout(finish, 7000));        // failsafe: the final layout always appears
+  }
+
+  // IntersectionObserver, not ScrollTrigger: nothing here re-runs on refresh or resize
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) play();
+  }, { threshold: 0.35 });
+  io.observe(root);
+
+  // ---- After the entrance (section 8) ----
+  function enableInteraction() {
+    if (code) {
+      code.addEventListener('pointerenter', runScan);          // hover the barcode to scan it again
+      code.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });       // barcode click scrolls to top
+      });
+    }
+
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    const moves = fronts.map((f) => ({
+      x: gsap.quickTo(f, 'x', { duration: 0.8, ease: 'power3' }),
+      y: gsap.quickTo(f, 'y', { duration: 0.8, ease: 'power3' }),
+    }));
+    root.addEventListener('pointermove', (e) => {
+      const nx = e.clientX / window.innerWidth  - 0.5;       // -0.5 to 0.5
+      const ny = e.clientY / window.innerHeight - 0.5;
+      moves.forEach((m) => { m.x(nx * 10); m.y(ny * 6); });  // the white layer drifts a few px
+    });
+  }
+
+  return () => {
+    io.disconnect();
+    timers.forEach(clearTimeout);
+    tl.kill();
+  };
+}
+
+// ==========================================================================
+// 9. Website Interactive Features
 // ==========================================================================
 function setupWebsiteInteractions() {
   // Mobile Nav Toggle
@@ -694,36 +814,10 @@ function setupWebsiteInteractions() {
     mobileToggle.addEventListener('click', () => {
       navLinks.classList.toggle('mobile-open');
     });
-    navLinks.querySelectorAll('.nav-link').forEach(link => {
+    navLinks.querySelectorAll('.nav-link').forEach((link) => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('mobile-open');
       });
-    });
-  }
-
-
-  // Contact Form Submission Mock
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const submitBtn = contactForm.querySelector('.btn-submit');
-      const originalText = submitBtn.innerText;
-      submitBtn.innerText = 'Transmission Received ✓';
-      submitBtn.style.backgroundColor = '#16a34a';
-      setTimeout(() => {
-        contactForm.reset();
-        submitBtn.innerText = originalText;
-        submitBtn.style.backgroundColor = '';
-      }, 3500);
-    });
-  }
-
-  // Back to Top button
-  const backToTopBtn = document.getElementById('back-to-top');
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 }

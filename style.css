@@ -847,12 +847,14 @@ body {
 .cc {
   --paper: #ffffff;
   --card-bg: #d9d9d9;
+  --card-border: rgba(0, 0, 0, 0.35);
   --ink: #111111;
   position: relative;
   overflow: hidden;
   background: var(--paper);
   min-height: 72.7vw;
   width: 100%;
+  border-top: clamp(8px, 0.8vw, 14px) solid var(--color-red, #b50c0c);
 }
 
 /* ---------- Camera ---------- */
@@ -889,6 +891,7 @@ body {
   width: var(--pw, 0%);
   aspect-ratio: 1;
   pointer-events: none;
+  z-index: 3;
 }
 
 .camera-wheel svg {
@@ -896,6 +899,7 @@ body {
   width: 100%;
   height: 100%;
   transform-origin: 50% 50%;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
 }
 
 .camera-part {
@@ -939,10 +943,10 @@ body {
   width: 100%;
   height: 100%;
   background: var(--card-bg);
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15));
   box-sizing: border-box;
   overflow: hidden;
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .pcard-face img {
@@ -988,6 +992,12 @@ body {
   visibility: hidden;
 }
 
+.cc.is-ready .pcard,
+.cc.is-in .pcard {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* ---------- Interaction: Cards (Section 6) ---------- */
 @media (hover: hover) {
   .cc.is-in .pcard:hover {
@@ -996,6 +1006,7 @@ body {
   .cc.is-in .pcard:hover .pcard-face {
     transform: translate(-10px, -10px);
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.5);
   }
 }
 

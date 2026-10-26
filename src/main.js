@@ -572,7 +572,11 @@ function initCameraCards() {
     if (started) return; // Never reset once entrance has begun (Fix Part B2)
     gsap.set(rise, { yPercent: 28, rotation: -3 });
     gsap.set(cards, {
-      x: (i, el) => window.innerWidth - el.getBoundingClientRect().left + 60,
+      x: (i, el) => {
+        const curX = gsap.getProperty(el, 'x') || 0;
+        const naturalLeft = el.getBoundingClientRect().left - curX;
+        return window.innerWidth - naturalLeft + 60;
+      },
       rotation: () => gsap.utils.random(-10, 10),
       scale: 1.08,
     });
@@ -581,7 +585,6 @@ function initCameraCards() {
   }
 
   setStart();
-  ScrollTrigger.addEventListener('refreshInit', setStart);
   root.classList.add('is-ready');
 
   // Rotating camera wheels: continuous slow spin, starting from rest at shutter click
@@ -610,11 +613,14 @@ function initCameraCards() {
     scrollTrigger: { trigger: root, start: 'top 60%', once: true },
     onStart() {
       started = true; // Lock cards in place: nothing resets them
-      ScrollTrigger.removeEventListener('refreshInit', setStart);
     },
     onComplete() {
-      // Hand control back to CSS so hover works normally (wheels NOT in clearProps)
-      gsap.set([rise, stack, cards, photos, af], { clearProps: 'all' });
+      // Clear ONLY transform and clipPath so inline CSS variables (--l, --t, --w, --h, --z) remain intact!
+      // DO NOT clear 'all' as it wipes out card dimensions and causes them to vanish.
+      gsap.set([rise, stack], { clearProps: 'transform' });
+      gsap.set(cards, { clearProps: 'transform' });
+      gsap.set(photos, { clearProps: 'clipPath' });
+      gsap.set(af, { autoAlpha: 0 });
       root.classList.add('is-in');
       enableCameraParallax(root);
     },
@@ -651,7 +657,6 @@ function initCameraCards() {
   }, 2.0);
 
   return () => {
-    ScrollTrigger.removeEventListener('refreshInit', setStart);
     spins.forEach((t) => t.kill());
     tl.kill();
   };

@@ -8,6 +8,9 @@ import { createWheel } from './createWheel.js';
 
 gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin, SplitText);
 
+// One design pixel in real pixels, for scripts (scale-to-design-fix.md Step E)
+export const S = () => window.innerWidth / 1440;
+
 let masterTimeline = null;
 let idleTween = null;
 let parallaxCleanup = null;
@@ -159,9 +162,9 @@ function startIdleAndParallax() {
   const portrait = document.querySelector('.hero-portrait');
   if (!portrait) return;
 
-  // 7.1 Idle float: gentle bobbing
+  // 7.1 Idle float: gentle bobbing scaled with S()
   idleTween = gsap.to(portrait, {
-    y: -8,
+    y: () => -8 * S(),
     duration: 3,
     ease: 'sine.inOut',
     yoyo: true,
@@ -176,7 +179,7 @@ function startIdleAndParallax() {
 
     const handleMouseMove = (e) => {
       const nx = e.clientX / window.innerWidth - 0.5; // -0.5 to 0.5
-      moveX(nx * 20);
+      moveX(nx * 20 * S());
       moveRot(nx * 1.5);
     };
 
@@ -257,7 +260,9 @@ async function init() {
     const track = document.querySelector('.scale-track');
     if (viewport && track) {
       buildTrack(track, viewport.offsetWidth);
-      const q = (TICK - ((viewport.offsetWidth / 2) % TICK)) % TICK;
+      const sample = track.querySelector('.scale-tick-unit');
+      const curTick = (sample && sample.offsetWidth) || (24 * S());
+      const q = (curTick - ((viewport.offsetWidth / 2) % curTick)) % curTick;
       gsap.set(track, { x: -q });
     }
   });
@@ -298,7 +303,7 @@ function initShelf() {
     // 0. Stack the cards at the center, flat and a little low
     gsap.set(cards, {
       autoAlpha: 1,
-      y: 60,
+      y: () => 60 * S(),
       zIndex: (i) => cards.length - i,
       x: (i, el) => stackX - (el.getBoundingClientRect().left + el.offsetWidth / 2),
     });
@@ -339,7 +344,7 @@ function initShelf() {
     );
 
     // 3. Button arrives last, then extrudes the same way
-    tl.fromTo(cta, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.5);
+    tl.fromTo(cta, { autoAlpha: 0, y: () => 40 * S() }, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.5);
     tl.to(ctaFace, { x: 0, y: 0, duration: 0.45, ease: 'back.out(2.2)' }, 1.9);
   }
 
@@ -356,11 +361,13 @@ function initShelf() {
 // Dragging the wheel slides the ridges AND the calibration scale in sync
 // ==========================================================================
 const MODE = 'loop';              // 'loop' | 'range'
-const TICK = 24;                  // px between two ticks. Read from design
 const TICKS_PER_PERIOD = 24;      // 6 major intervals * 4 ticks = 24 ticks (0, 15, 30, 45, 60, 75)
-const PERIOD = TICK * TICKS_PER_PERIOD;
-const RIDGE_TILE = 148;           // rendered width of ONE repeat of the ridge strip in px
 const RIDGE_RATIO = 1;            // how far ridges move per px of drag
+
+function getTick() {
+  const sampleTick = document.querySelector('.scale-tick-unit');
+  return (sampleTick && sampleTick.offsetWidth) || (24 * S());
+}
 
 function buildTrack(track, viewportWidth) {
   const steps = [
@@ -394,7 +401,9 @@ function buildTrack(track, viewportWidth) {
   if (MODE === 'range') {
     track.innerHTML = periodHTML;
   } else {
-    const copies = Math.ceil(viewportWidth / PERIOD) + 2;
+    const tickPx = getTick();
+    const periodPx = tickPx * TICKS_PER_PERIOD;
+    const copies = Math.ceil(viewportWidth / periodPx) + 2;
     track.innerHTML = periodHTML.repeat(copies);
   }
 }
@@ -411,13 +420,27 @@ function initWheelScale() {
   const V = viewport.offsetWidth || window.innerWidth;
   buildTrack(track, V);
 
-  // Phase offset so a tick sits exactly under the lens at rest (x = 0)
-  const q = (TICK - ((V / 2) % TICK)) % TICK;
+  const tick = () => {
+    const t = track.querySelector('.scale-tick-unit');
+    return (t && t.offsetWidth) || (24 * S());
+  };
+  const period = () => tick() * TICKS_PER_PERIOD;
+  const ridgeTile = () => 148 * S();
 
-  const wrapScale = gsap.utils.wrap(-PERIOD, 0);
-  const wrapRidge = gsap.utils.wrap(0, RIDGE_TILE);
+  // Phase offset so a tick sits exactly under the lens at rest (x = 0)
+  const calcQ = (vw) => {
+    const t = tick();
+    return (t - ((vw / 2) % t)) % t;
+  };
 
   function render(x) {
+    const rTile = ridgeTile();
+    const p = period();
+    const currentV = viewport.offsetWidth || window.innerWidth;
+    const q = calcQ(currentV);
+    const wrapScale = gsap.utils.wrap(-p, 0);
+    const wrapRidge = gsap.utils.wrap(0, rTile);
+
     ridges.style.backgroundPositionX = wrapRidge(x * RIDGE_RATIO) + 'px';
     gsap.set(track, { x: (MODE === 'loop' ? wrapScale(x) : x) - q });
     if (wheel) {
@@ -434,14 +457,16 @@ function initWheelScale() {
     trigger: [ring, wheel],
     type: 'x',
     inertia: true,
-    snap: (v) => Math.round(v / TICK) * TICK,    // settle on the nearest tick
+    snap: (v) => {
+      const t = tick();
+      return Math.round(v / t) * t;
+    },
     onDrag: function () { render(this.x); },
     onThrowUpdate: function () { render(this.x); },
   };
 
   if (MODE === 'range') {
-    const rangeWidth = (TICKS_PER_PERIOD - 1) * TICK;
-    config.bounds = { minX: -rangeWidth, maxX: 0 };
+    config.bounds = { minX: -(TICKS_PER_PERIOD - 1) * tick(), maxX: 0 };
     config.edgeResistance = 0.85;
   }
 
@@ -454,7 +479,7 @@ function initWheelScale() {
     e.preventDefault();
     const dir = e.key === 'ArrowRight' ? 1 : -1;
     gsap.to(proxy, {
-      x: '+=' + dir * TICK,
+      x: '+=' + dir * tick(),
       duration: 0.3,
       ease: 'power2.out',
       onUpdate() {
@@ -471,8 +496,7 @@ function initWheelScale() {
   function onResize() {
     const newV = viewport.offsetWidth || window.innerWidth;
     buildTrack(track, newV);
-    const newQ = (TICK - ((newV / 2) % TICK)) % TICK;
-    gsap.set(track, { x: (MODE === 'loop' ? wrapScale(drag.x) : drag.x) - newQ });
+    render(drag.x);
   }
   window.addEventListener('resize', onResize);
 
@@ -582,7 +606,7 @@ function initCameraCards() {
       x: (i, el) => {
         const curX = gsap.getProperty(el, 'x') || 0;
         const naturalLeft = el.getBoundingClientRect().left - curX;
-        return window.innerWidth - naturalLeft + 60;
+        return window.innerWidth - naturalLeft + 60 * S();
       },
       rotation: () => gsap.utils.random(-10, 10),
       scale: 1.08,
@@ -685,8 +709,8 @@ function enableCameraParallax(root) {
   root.addEventListener('pointermove', (e) => {
     const nx = e.clientX / window.innerWidth - 0.5;
     const ny = e.clientY / window.innerHeight - 0.5;
-    cx(nx * 16); cy(ny * 10);
-    kx(nx * -12); ky(ny * -8);
+    cx(nx * 16 * S()); cy(ny * 10 * S());
+    kx(nx * -12 * S()); ky(ny * -8 * S());
   });
 }
 
@@ -792,7 +816,7 @@ export function initFooter() {
     root.addEventListener('pointermove', (e) => {
       const nx = e.clientX / window.innerWidth  - 0.5;       // -0.5 to 0.5
       const ny = e.clientY / window.innerHeight - 0.5;
-      moves.forEach((m) => { m.x(nx * 10); m.y(ny * 6); });  // the white layer drifts a few px
+      moves.forEach((m) => { m.x(nx * 10 * S()); m.y(ny * 6 * S()); });  // the white layer drifts a few px
     });
   }
 

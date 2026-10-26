@@ -21,7 +21,7 @@
   --font-display: 'Syne', 'Inter', sans-serif;
   --font-mono: 'Space Mono', monospace;
   
-  --nav-height: calc(60 * var(--s));
+  --nav-height: calc(46 * var(--s));
   --cols: 47;
   --rows: 5;
 }
@@ -209,8 +209,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  height: 72%;
-  max-height: calc(697 * var(--s));
+  height: 87.1%;
+  max-height: calc(844 * var(--s));
+  margin-bottom: calc(20 * var(--s));
   will-change: transform;
   pointer-events: auto;
 }
@@ -245,8 +246,8 @@ body {
 
 .hero-title {
   position: relative;
-  width: min(calc(1385 * var(--s)), 96vw);
-  max-width: calc(18vh * 48 / 5);
+  width: min(calc(1316 * var(--s)), 91.2vw);
+  max-width: calc(17.1vh * 48 / 5);
   /* The word is 47 blocks wide + 1 block for shadow = 48 columns by 5 rows */
   aspect-ratio: 48 / 5;
   display: block;
@@ -261,8 +262,7 @@ body {
   height: 100%;
   display: flex;
   align-items: stretch;
-  justify-content: space-between;
-  gap: calc(100% / 47 / 3 * 0.8);
+  gap: 0;
 }
 
 /* Shadow Layer: Offset by 1 block cell to the right */
@@ -272,6 +272,7 @@ body {
 }
 
 .px-layer--white {
+  left: 0;
   z-index: 2;
 }
 
@@ -592,7 +593,7 @@ body {
   --card-shadow: #1f1f1f;
   --btn: #d9d9d9;
   --btn-shadow: #000000;
-  --off: calc(25 * var(--s));
+  --off: calc(22.5 * var(--s));
   --boff: calc(10 * var(--s));
 
   position: relative;
@@ -602,17 +603,19 @@ body {
   min-height: calc(1024 * var(--s));
 }
 
-/* Row bleeds off the left edge; last shadow is clipped on the right */
+/* Row centered on the screen */
 .shelf-row {
   display: flex;
+  justify-content: center;
   gap: var(--off);
-  margin-left: -1.6vw;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* ---------- Card ---------- */
 .xcard {
   position: relative;
-  flex: 0 0 24vw;
+  flex: 0 0 21.6vw;
   aspect-ratio: 345 / 473;
 }
 .xcard-shadow {
@@ -700,7 +703,8 @@ body {
 }
 
 /* ==========================================================================
-   About Section: "GET TO KNOW ME" (about-section-spec.md)
+/* ==========================================================================
+   About Section: "GET TO KNOW ME" (Desktop - 6.png)
    ========================================================================== */
 .about {
   --paper: #ffffff;
@@ -713,16 +717,16 @@ body {
   position: relative;
   overflow: hidden;                 /* clips the card at the right edge */
   background: var(--paper);
-  padding: 7vw 0;                   /* match the design's vertical spacing */
-  min-height: 62vw;                 /* match the design's section height */
+  padding: calc(193 * var(--s)) 0 calc(100 * var(--s));
+  min-height: calc(1024 * var(--s));
 }
 
 /* ---------- Left: label + paragraph ---------- */
 .about-copy {
   position: relative;
   z-index: 1;
-  margin-left: 9.5vw;
-  width: 33vw;
+  margin-left: calc(132 * var(--s));
+  width: calc(484 * var(--s));
 }
 
 .about-label {
@@ -730,13 +734,13 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 5.8vw;
-  padding-inline: 1.6vw;
+  height: calc(87 * var(--s));
+  padding-inline: calc(24 * var(--s));
   background: var(--red);
   color: #ffffff;
   font-family: var(--font-nav);
   font-weight: 700;
-  font-size: max(calc(40 * var(--s)), 12px);
+  font-size: max(calc(38 * var(--s)), 12px);
   letter-spacing: 0.01em;
   text-transform: uppercase;
   overflow: hidden;                 /* masks the text for the entrance animation */
@@ -748,7 +752,7 @@ body {
 }
 
 .about-text {
-  margin: 3.8vw 0 0;
+  margin: calc(77 * var(--s)) 0 0;
   color: var(--ink);
   font-family: var(--font-nav);
   font-size: max(calc(34 * var(--s)), 12px);
@@ -759,11 +763,11 @@ body {
 /* ---------- Right: the tilted card ---------- */
 .about-card {
   position: absolute;
-  left: 60vw;
-  top: 4vw;                         /* match the design */
+  left: calc(883 * var(--s));
+  top: calc(252 * var(--s));
   display: flex;
-  width: 52vw;                      /* wide enough to run past the right edge */
-  height: 43vw;
+  width: calc(650 * var(--s));
+  height: calc(628 * var(--s));
   transform: rotate(var(--tilt));
   transform-origin: 0% 50%;
   overflow: hidden;
@@ -771,7 +775,7 @@ body {
 
 .about-strip {
   position: relative;
-  flex: 0 0 6.2vw;
+  flex: 0 0 calc(61 * var(--s));
   background: var(--strip);
   display: flex;
   align-items: center;
@@ -783,11 +787,11 @@ body {
   transform: rotate(180deg);        /* bottom to top */
   color: var(--strip-text);
   font-family: var(--font-nav);
-  font-size: max(calc(22 * var(--s)), 10px);
+  font-size: max(calc(20 * var(--s)), 10px);
   letter-spacing: 0.06em;
   white-space: nowrap;
   display: flex;
-  gap: 2vw;
+  gap: calc(24 * var(--s));
   user-select: none;
 }
 
@@ -802,7 +806,7 @@ body {
   position: absolute;
   bottom: 0;                        /* bottom-aligned, cropped by the card's edge */
   left: 50%;
-  height: 88%;
+  height: 78%;
   width: auto;
   transform: translateX(-50%);
   filter: grayscale(100%) contrast(1.05);
@@ -849,18 +853,17 @@ body {
 }
 
 /* ==========================================================================
-   Section 5: Camera + Project Cards Section (camera-cards-section-spec.md)
-   Matches Screenshot 2026-10-22 164755.png
+   Section 5: Camera + Project Cards Section (Desktop - 7.png)
    ========================================================================== */
 .cc {
   --paper: #ffffff;
   --card-bg: #d9d9d9;
-  --card-border: rgba(0, 0, 0, 0.35);
-  --ink: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.65);
+  --ink: #111111;
   position: relative;
   overflow: hidden;
-  background: var(--color-red, #b50c0c);
-  min-height: 72.7vw;
+  background: var(--paper, #ffffff);
+  min-height: calc(1024 * var(--s));
   width: 100%;
 }
 
@@ -869,8 +872,8 @@ body {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 56.5vw;
-  max-width: calc(815 * var(--s));
+  width: calc(813 * var(--s));
+  max-width: none;
   z-index: 1;
 }
 
@@ -927,10 +930,10 @@ body {
 /* ---------- Card pile ---------- */
 .cluster {
   position: absolute;
-  left: 41.3vw;
-  top: 21vw;
-  width: 53vw;
-  aspect-ratio: 765 / 620;
+  left: calc(596 * var(--s));
+  top: calc(281 * var(--s));
+  width: calc(764 * var(--s));
+  aspect-ratio: 764 / 619;
   z-index: 2;
 }
 
@@ -1247,6 +1250,6 @@ body {
   }
   
   .hero-portrait-wrapper {
-    height: 75%;
+    height: 90.8%;
   }
 }

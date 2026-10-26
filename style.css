@@ -1,7 +1,7 @@
 /* Modern Photography Portfolio Design System */
 :root {
   --design-w: 1440;                                   /* the width of the design frames */
-  --k: 1;                                             /* global tuning knob (1 = exactly the design) */
+  --k: 0.88;                                          /* global tuning knob (balances 100% zoom with design aesthetic) */
   --s: calc(var(--k) * 100vw / var(--design-w));      /* ONE design pixel, as a real length */
 
   --color-red: #b50c0c;
@@ -171,8 +171,9 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  height: calc(1024 * var(--s));
-  min-height: calc(600 * var(--s));
+  height: 100vh;
+  min-height: 500px;
+  max-height: calc(1024 * var(--s));
   overflow: hidden;
   background-color: var(--color-red);
 }
@@ -208,8 +209,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  height: 90%;
-  max-height: calc(850 * var(--s));
+  height: 72%;
+  max-height: calc(697 * var(--s));
   will-change: transform;
   pointer-events: auto;
 }
@@ -229,7 +230,7 @@ body {
 /* Layer 2: Pixel Text ("PHOTOGRAPHER") */
 .hero-title-container {
   position: absolute;
-  bottom: 0;
+  bottom: calc(20 * var(--s));
   left: 0;
   right: 0;
   z-index: 2;
@@ -237,18 +238,19 @@ body {
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
-  padding: 0 calc(40 * var(--s)) 0;     /* flush at bottom, level with the hero image */
+  padding: 0;
   width: 100%;
 }
 
 
 .hero-title {
   position: relative;
-  width: calc(1380 * var(--s));
+  width: min(calc(1385 * var(--s)), 96vw);
+  max-width: calc(18vh * 48 / 5);
   /* The word is 47 blocks wide + 1 block for shadow = 48 columns by 5 rows */
   aspect-ratio: 48 / 5;
   display: block;
-  margin: 0;
+  margin: 0 auto;
 }
 
 .px-layer {

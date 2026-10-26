@@ -9,7 +9,8 @@ import { createWheel } from './createWheel.js';
 gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin, SplitText);
 
 // One design pixel in real pixels, for scripts (scale-to-design-fix.md Step E)
-export const S = () => window.innerWidth / 1440;
+export const K = 0.88;
+export const S = () => (window.innerWidth / 1440) * K;
 
 let masterTimeline = null;
 let idleTween = null;

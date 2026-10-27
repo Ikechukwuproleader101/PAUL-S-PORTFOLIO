@@ -10,7 +10,10 @@ gsap.registerPlugin(ScrollTrigger, Draggable, InertiaPlugin, SplitText);
 
 // One design pixel in real pixels, for scripts (scale-to-design-fix.md Step E)
 export const K = 0.88;
-export const S = () => (window.innerWidth / 1440) * K;
+export const S = () => {
+  const k = window.innerWidth <= 900 ? 1 : K;
+  return (window.innerWidth / 1440) * k;
+};
 
 let masterTimeline = null;
 let idleTween = null;

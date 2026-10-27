@@ -1216,9 +1216,9 @@ body {
 /* Editorial Brand Typography: "MY WORKS" & Custom QR Code */
 .ag-text-horizontal {
   position: absolute;
-  left: calc(580 * var(--s));
-  top: calc(888 * var(--s));
-  height: calc(114 * var(--s));
+  left: calc(680 * var(--s));
+  top: calc(900 * var(--s));
+  height: calc(96 * var(--s));
   display: flex;
   align-items: center;
   z-index: 5;
@@ -1229,10 +1229,10 @@ body {
 
 .ag-works-label {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: calc(112 * var(--s));
+  font-size: calc(84 * var(--s));
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: calc(-1 * var(--s));
+  letter-spacing: 0;
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
@@ -1240,8 +1240,8 @@ body {
 
 .ag-text-vertical {
   position: absolute;
-  left: calc(1395 * var(--s));
-  top: calc(865 * var(--s));
+  left: calc(1332 * var(--s));
+  top: calc(860 * var(--s));
   transform-origin: 0 0;
   transform: rotate(-90deg);
   z-index: 5;
@@ -1252,10 +1252,10 @@ body {
 
 .ag-works-vertical-label {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: calc(112 * var(--s));
+  font-size: calc(84 * var(--s));
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: calc(-1 * var(--s));
+  letter-spacing: 0;
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
@@ -1264,15 +1264,16 @@ body {
 
 .ag-qr-container {
   position: absolute;
-  left: calc(1296 * var(--s));
-  top: calc(888 * var(--s));
-  width: calc(114 * var(--s));
-  height: calc(114 * var(--s));
+  left: calc(1324 * var(--s));
+  top: calc(908 * var(--s));
+  width: calc(90 * var(--s));
+  height: calc(90 * var(--s));
   background-color: #ffffff;
   padding: calc(3 * var(--s));
   box-sizing: border-box;
   z-index: 5;
   pointer-events: auto;
+  cursor: pointer;
   will-change: transform, opacity;
 }
 
@@ -1301,10 +1302,18 @@ body {
   visibility: visible;
 }
 
-/* Responsive Scaling: keep exact layout without overflow */
+/* Responsive Scaling: preserve exact desktop composition edge-to-edge on mobile */
 @media (max-width: 900px) {
   .ag-hero {
+    --s: calc(100vw / var(--design-w));
     min-height: calc(1024 * var(--s));
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ag-stage {
+    width: 100vw;
+    height: calc(1024 * var(--s));
   }
 }
 

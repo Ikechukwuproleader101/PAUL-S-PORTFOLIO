@@ -1213,13 +1213,94 @@ body {
   z-index: 2;
 }
 
-/* Progressive enhancement: hide panels before JS animation runs */
-.js .ag-hero:not(.is-ready) [data-hero-panel] {
+/* Editorial Brand Typography: "MY WORKS" & Custom QR Code */
+.ag-text-horizontal {
+  position: absolute;
+  left: calc(650 * var(--s));
+  top: calc(900 * var(--s));
+  height: calc(100 * var(--s));
+  display: flex;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+.ag-works-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: calc(64 * var(--s));
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: calc(1.5 * var(--s));
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ag-text-vertical {
+  position: absolute;
+  right: calc(16 * var(--s));
+  bottom: calc(135 * var(--s));
+  width: calc(120 * var(--s));
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 5;
+  pointer-events: none;
+  user-select: none;
+  transform: rotate(-90deg);
+  transform-origin: right bottom;
+  will-change: transform, opacity;
+}
+
+.ag-works-vertical-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: calc(64 * var(--s));
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: calc(1.5 * var(--s));
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ag-qr-container {
+  position: absolute;
+  right: calc(26 * var(--s));
+  bottom: calc(22 * var(--s));
+  width: calc(90 * var(--s));
+  height: calc(90 * var(--s));
+  background-color: #ffffff;
+  padding: calc(2 * var(--s));
+  box-sizing: border-box;
+  z-index: 5;
+  pointer-events: auto;
+  will-change: transform, opacity;
+}
+
+.ag-qr-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Progressive enhancement: hide panels, text, and QR before JS animation runs */
+.js .ag-hero:not(.is-ready) [data-hero-panel],
+.js .ag-hero:not(.is-ready) [data-hero-text],
+.js .ag-hero:not(.is-ready) [data-hero-qr] {
   visibility: hidden;
 }
 
 .ag-hero.is-ready [data-hero-panel],
-.ag-hero.is-done [data-hero-panel] {
+.ag-hero.is-ready [data-hero-text],
+.ag-hero.is-ready [data-hero-qr],
+.ag-hero.is-done [data-hero-panel],
+.ag-hero.is-done [data-hero-text],
+.ag-hero.is-done [data-hero-qr] {
   visibility: visible;
 }
 
@@ -1232,7 +1313,9 @@ body {
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .ag-hero [data-hero-panel] {
+  .ag-hero [data-hero-panel],
+  .ag-hero [data-hero-text],
+  .ag-hero [data-hero-qr] {
     clip-path: none !important;
     transform: none !important;
     opacity: 1 !important;

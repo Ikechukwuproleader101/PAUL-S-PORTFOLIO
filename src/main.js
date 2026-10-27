@@ -776,9 +776,9 @@ export function initArchitecturalSection() {
     autoAlpha: 1,
   });
 
-  if (textH) gsap.set(textH, { y: 20 * S(), autoAlpha: 0 });
-  if (textV) gsap.set(textV, { x: 20 * S(), autoAlpha: 0 });
-  if (qr) gsap.set(qr, { scale: 0.88, autoAlpha: 0 });
+  if (textH) gsap.set(textH, { y: 16 * S(), autoAlpha: 0 });
+  if (textV) gsap.set(textV, { autoAlpha: 0 });
+  if (qr) gsap.set(qr, { scale: 0.9, autoAlpha: 0 });
 
   root.classList.add('is-ready');
 
@@ -795,7 +795,7 @@ export function initArchitecturalSection() {
         // Clear clip-path after entrance so that edges stay pristine
         gsap.set(allPanelEls, { clearProps: 'clipPath' });
         if (textH) gsap.set(textH, { clearProps: 'transform' });
-        if (textV) gsap.set(textV, { clearProps: 'transform' });
+        if (textV) gsap.set(textV, { clearProps: 'opacity,visibility' });
         if (qr) gsap.set(qr, { clearProps: 'transform,scale' });
       },
     });
@@ -846,7 +846,7 @@ export function initArchitecturalSection() {
       tl.to(textH, { y: 0, autoAlpha: 1, duration: 0.65, ease: 'power3.out' }, 0.44);
     }
     if (textV) {
-      tl.to(textV, { x: 0, autoAlpha: 1, duration: 0.65, ease: 'power3.out' }, 0.44);
+      tl.to(textV, { autoAlpha: 1, duration: 0.65, ease: 'power3.out' }, 0.44);
     }
     if (qr) {
       tl.to(qr, { scale: 1, autoAlpha: 1, duration: 0.60, ease: 'power3.out' }, 0.48);
@@ -879,9 +879,9 @@ export function initArchitecturalSection() {
     hasEntered = true;
     root.classList.remove('is-done');
     gsap.set(allPanelEls, { clipPath: 'inset(0% 100% 0% 0%)', autoAlpha: 1 });
-    if (textH) gsap.set(textH, { y: 20 * S(), autoAlpha: 0 });
-    if (textV) gsap.set(textV, { x: 20 * S(), autoAlpha: 0 });
-    if (qr) gsap.set(qr, { scale: 0.88, autoAlpha: 0 });
+    if (textH) gsap.set(textH, { y: 16 * S(), autoAlpha: 0 });
+    if (textV) gsap.set(textV, { autoAlpha: 0 });
+    if (qr) gsap.set(qr, { scale: 0.9, autoAlpha: 0 });
     const replayTl = buildTimeline();
     replayTl.play();
   };

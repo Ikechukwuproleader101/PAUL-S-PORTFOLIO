@@ -1216,9 +1216,9 @@ body {
 /* Editorial Brand Typography: "MY WORKS" & Custom QR Code */
 .ag-text-horizontal {
   position: absolute;
-  left: calc(650 * var(--s));
-  top: calc(900 * var(--s));
-  height: calc(100 * var(--s));
+  left: calc(580 * var(--s));
+  top: calc(888 * var(--s));
+  height: calc(114 * var(--s));
   display: flex;
   align-items: center;
   z-index: 5;
@@ -1228,11 +1228,11 @@ body {
 }
 
 .ag-works-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: calc(64 * var(--s));
-  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: calc(112 * var(--s));
+  font-weight: 800;
   color: #ffffff;
-  letter-spacing: calc(1.5 * var(--s));
+  letter-spacing: calc(-1 * var(--s));
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
@@ -1240,39 +1240,36 @@ body {
 
 .ag-text-vertical {
   position: absolute;
-  right: calc(16 * var(--s));
-  bottom: calc(135 * var(--s));
-  width: calc(120 * var(--s));
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  left: calc(1395 * var(--s));
+  top: calc(865 * var(--s));
+  transform-origin: 0 0;
+  transform: rotate(-90deg);
   z-index: 5;
   pointer-events: none;
   user-select: none;
-  transform: rotate(-90deg);
-  transform-origin: right bottom;
   will-change: transform, opacity;
 }
 
 .ag-works-vertical-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: calc(64 * var(--s));
-  font-weight: 700;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: calc(112 * var(--s));
+  font-weight: 800;
   color: #ffffff;
-  letter-spacing: calc(1.5 * var(--s));
+  letter-spacing: calc(-1 * var(--s));
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
+  display: block;
 }
 
 .ag-qr-container {
   position: absolute;
-  right: calc(26 * var(--s));
-  bottom: calc(22 * var(--s));
-  width: calc(90 * var(--s));
-  height: calc(90 * var(--s));
+  left: calc(1296 * var(--s));
+  top: calc(888 * var(--s));
+  width: calc(114 * var(--s));
+  height: calc(114 * var(--s));
   background-color: #ffffff;
-  padding: calc(2 * var(--s));
+  padding: calc(3 * var(--s));
   box-sizing: border-box;
   z-index: 5;
   pointer-events: auto;

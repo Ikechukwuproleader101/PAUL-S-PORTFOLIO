@@ -599,18 +599,32 @@ function initCameraCards() {
 
   let started = false;
 
-  // Starting state: cards start beyond right edge, camera offset below
+  // Starting state: cards start tucked at the camera ejection flank
   function setStart() {
     if (started) return; // Never reset once entrance has begun (Fix Part B2)
     gsap.set(rise, { yPercent: 28, rotation: -3 });
+
+    const cameraEl = root.querySelector('.camera');
+    const camRect  = cameraEl ? cameraEl.getBoundingClientRect() : null;
+    const ejectX   = camRect ? (camRect.left + camRect.width * 0.68) : 0;
+    const ejectY   = camRect ? (camRect.top + camRect.height * 0.44) : 0;
+
     gsap.set(cards, {
       x: (i, el) => {
+        if (!camRect) return -120 * S();
         const curX = gsap.getProperty(el, 'x') || 0;
-        const naturalLeft = el.getBoundingClientRect().left - curX;
-        return window.innerWidth - naturalLeft + 60 * S();
+        const cardX = el.getBoundingClientRect().left - curX;
+        return ejectX - cardX;
       },
-      rotation: () => gsap.utils.random(-10, 10),
-      scale: 1.08,
+      y: (i, el) => {
+        if (!camRect) return 0;
+        const curY = gsap.getProperty(el, 'y') || 0;
+        const cardY = el.getBoundingClientRect().top - curY;
+        return ejectY - cardY;
+      },
+      scale: 0.18,
+      autoAlpha: 0,
+      rotation: -10,
     });
     gsap.set(photos, { clipPath: 'inset(100% 0% 0% 0%)' });
     gsap.set(af, { autoAlpha: 0 });
@@ -647,7 +661,7 @@ function initCameraCards() {
       started = true; // Lock cards in place: nothing resets them
     },
     onComplete() {
-      // Clear ONLY transform and clipPath so inline CSS variables (--l, --t, --w, --h, --z) remain intact!
+      // Clear ONLY transform and clipPath so inline CSS variables (--l, --t, --w, --h, --z, --r) remain intact!
       // DO NOT clear 'all' as it wipes out card dimensions and causes them to vanish.
       gsap.set([rise, stack], { clearProps: 'transform' });
       gsap.set(cards, { clearProps: 'transform' });
@@ -670,14 +684,19 @@ function initCameraCards() {
   tl.add(startSpin, 1.35);
   tl.to(af, { autoAlpha: 0, duration: 0.15, ease: 'none' }, 1.8);
 
-  // 4. Cards are thrown in, back to front
+  // 4. Cards burst out of the camera, cascading into their fanned positions
   tl.to(cards, {
     x: 0,
-    rotation: 0,
+    y: 0,
     scale: 1,
-    duration: 0.8,
-    ease: 'power4.out',
-    stagger: 0.06,
+    autoAlpha: 1,
+    rotation: (i, el) => {
+      const r = el.style.getPropertyValue('--r');
+      return r ? parseFloat(r) : 0;
+    },
+    duration: 0.85,
+    ease: 'power3.out',
+    stagger: 0.05,
   }, 1.35);
 
   // 5. Photos are exposed with a hard wipe

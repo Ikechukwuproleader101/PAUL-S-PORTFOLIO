@@ -17,6 +17,11 @@ dist/
 scratch/
 *.log
 
+# Design Specs, Reference Images, & Briefs (Excluded from Vercel deployment)
+specs-and-references/
+*.md
+!README.md
+
 # Editor & OS Files
 .DS_Store
 Thumbs.db

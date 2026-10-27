@@ -228,7 +228,6 @@ async function init() {
 
   let wheelScaleCleanup = null;
   let aboutCleanup = null;
-  let cameraCardsCleanup = null;
   let architecturalCleanup = null;
   let footerCleanup = null;
   mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -236,7 +235,6 @@ async function init() {
     initShelf();
     wheelScaleCleanup = initWheelScale();
     aboutCleanup = initAbout();
-    cameraCardsCleanup = initCameraCards();
     architecturalCleanup = initArchitecturalSection();
     footerCleanup = initFooter();
   });
@@ -244,7 +242,6 @@ async function init() {
   mm.add('(prefers-reduced-motion: reduce)', () => {
     if (wheelScaleCleanup) wheelScaleCleanup();
     if (aboutCleanup) aboutCleanup();
-    if (cameraCardsCleanup) cameraCardsCleanup();
     if (architecturalCleanup) architecturalCleanup();
     if (footerCleanup) footerCleanup();
     gsap.set(['.hero-bg', '.hero-portrait', '.px', '.nav'], { clearProps: 'all' });

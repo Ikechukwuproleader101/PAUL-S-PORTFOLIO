@@ -1,182 +1,169 @@
 /* ==========================================================================
-   Studio Gallery Stylesheet
-   Matches 555702041544185121.jpg reference layout & aesthetic
-   Uses 100% Pure CSS & SVG — Zero Image Files Added
+   Neo-Brutalist Studio Gallery Stylesheet
+   Matches 555702041544185121.jpg Layout with Homepage Neo-Brutalism
+   (Bold solid borders, hard-offset black shadows, tactile hover lifts)
+   100% Pure CSS & SVG — Zero Image Files Added
    ========================================================================== */
 
-:root {
-  --studio-bg: #ffffff;
-  --studio-text: #111111;
-  --studio-muted: #666666;
-  --studio-border: #f0f0f0;
-  --studio-gap: 12px;
-  --studio-radius: 2px;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Syne', var(--font-sans);
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body.studio-body {
-  background-color: var(--studio-bg);
-  color: var(--studio-text);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+/* Page-level overrides for Gallery */
+body.studio-gallery-page {
+  background-color: #f0ede6;
+  color: #111111;
+  font-family: var(--font-nav, 'Inter', sans-serif);
+  min-height: 100vh;
+  padding-top: calc(var(--nav-height) + calc(28 * var(--s)));
+  padding-bottom: calc(80 * var(--s));
   overflow-x: hidden;
 }
 
-/* ==========================================================================
-   1. Studio Header Navigation
-   ========================================================================== */
-.studio-header {
-  position: sticky;
+/* Ensure the shared homepage .nav displays properly */
+body.studio-gallery-page .nav {
+  position: fixed;
   top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--studio-border);
-  padding: 0 24px;
+  left: 0;
+  right: 0;
+  height: var(--nav-height);
+  background-color: #ffffff;
+  border-bottom: 2px solid #000000;
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
 }
 
-.studio-header-inner {
-  max-width: 1720px;
-  margin: 0 auto;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.studio-header-left {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.studio-logo {
-  font-family: var(--font-sans);
-  font-size: 22px;
-  font-weight: 800;
+body.studio-gallery-page .nav-link.active {
+  font-weight: 700;
   color: #000000;
-  text-decoration: none;
+  position: relative;
+}
+
+body.studio-gallery-page .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #000000;
+}
+
+/* ==========================================================================
+   Gallery Header Banner (Neo-Brutalist Editorial Intro)
+   ========================================================================== */
+.gallery-intro-banner {
+  max-width: 1720px;
+  margin: 0 auto calc(24 * var(--s));
+  padding: 0 calc(36 * var(--s));
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.gallery-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: calc(16 * var(--s));
+}
+
+.gallery-title-main {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: max(calc(36 * var(--s)), 28px);
+  font-weight: 800;
   letter-spacing: -0.04em;
-  transition: opacity 0.2s ease;
+  text-transform: lowercase;
+  color: #000000;
+  line-height: 1;
 }
 
-.studio-logo:hover {
-  opacity: 0.75;
+.gallery-title-sub {
+  font-family: var(--font-mono, monospace);
+  font-size: max(calc(12 * var(--s)), 11px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #555555;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  box-shadow: 2.5px 2.5px 0px #000000;
+  padding: 3px 10px;
 }
 
-.studio-back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--studio-muted);
-  text-decoration: none;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  background: #f5f5f5;
-  transition: all 0.2s ease;
-}
-
-.studio-back-link:hover {
-  color: #000;
-  background: #ebebeb;
-  transform: translateX(-2px);
-}
-
-.studio-nav {
+.gallery-filter-tags {
   display: flex;
   align-items: center;
-  gap: 32px;
-}
-
-.studio-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  gap: calc(10 * var(--s));
   list-style: none;
 }
 
-.studio-nav-item {
-  font-size: 13px;
-  font-weight: 500;
-  color: #333333;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.studio-nav-item:hover {
-  color: #000000;
-}
-
-.studio-btn-touch {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 18px;
-  font-size: 13px;
+.gallery-tag-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: max(calc(11 * var(--s)), 11px);
   font-weight: 600;
-  color: #ffffff;
-  background: #000000;
-  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: calc(6 * var(--s)) calc(14 * var(--s));
+  background: #ffffff;
+  color: #000000;
+  border: 1.5px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  cursor: pointer;
 }
 
-.studio-btn-touch:hover {
-  background: #222222;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.gallery-tag-pill:hover,
+.gallery-tag-pill.active {
+  background: #000000;
+  color: #ffffff;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px #000000;
 }
 
 /* ==========================================================================
-   2. Main Gallery Grid Container (5 Columns Layout)
+   5-Column Neo-Brutalist Masonry Wall
    ========================================================================== */
 .studio-main {
   max-width: 1720px;
   margin: 0 auto;
-  padding: 16px 24px 60px;
+  padding: 0 calc(36 * var(--s));
 }
 
 .studio-gallery-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--studio-gap);
+  gap: calc(22 * var(--s));
   align-items: start;
 }
 
 .gallery-col {
   display: flex;
   flex-direction: column;
-  gap: var(--studio-gap);
+  gap: calc(22 * var(--s));
 }
 
 /* ==========================================================================
-   3. Base Gallery Card
+   Neo-Brutalist Card Styling (Matches Homepage Cards)
    ========================================================================== */
 .gallery-card {
   position: relative;
   width: 100%;
-  border-radius: var(--studio-radius);
+  background-color: #ffffff;
+  border: max(2px, calc(2.5 * var(--s))) solid #000000;
+  box-shadow: calc(9 * var(--s)) calc(9 * var(--s)) 0px #000000;
+  border-radius: 0px;
   overflow: hidden;
-  background-color: #f0f0f0;
   cursor: pointer;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .gallery-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transform: translate(calc(-4 * var(--s)), calc(-4 * var(--s)));
+  box-shadow: calc(14 * var(--s)) calc(14 * var(--s)) 0px #000000;
+}
+
+.gallery-card:active {
+  transform: translate(calc(3 * var(--s)), calc(3 * var(--s)));
+  box-shadow: calc(6 * var(--s)) calc(6 * var(--s)) 0px #000000;
 }
 
 .card-canvas {
@@ -184,6 +171,7 @@ body.studio-body {
   width: 100%;
   display: block;
   overflow: hidden;
+  background-color: #e5e5e5;
 }
 
 .card-canvas svg {
@@ -191,36 +179,57 @@ body.studio-body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .gallery-card:hover .card-canvas svg {
-  transform: scale(1.03);
+  transform: scale(1.025);
 }
 
-/* Metadata Overlay & Badge */
+/* Neo-Brutalist Top-Right Index Tag */
+.card-neo-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #000000;
+  color: #ffffff;
+  font-family: var(--font-mono, monospace);
+  font-size: max(calc(10 * var(--s)), 10px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: calc(4 * var(--s)) calc(8 * var(--s));
+  border-left: 2px solid #000000;
+  border-bottom: 2px solid #000000;
+  z-index: 8;
+  pointer-events: none;
+}
+
+/* Neo-Brutalist Interactive Badge (e.g. "Hermes home →") */
 .card-pill-tag {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  bottom: calc(16 * var(--s));
+  left: calc(16 * var(--s));
   z-index: 10;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: calc(8 * var(--s));
+  padding: calc(7 * var(--s)) calc(16 * var(--s));
   background: #ffffff;
-  color: #111111;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  border-radius: 9999px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-  transition: transform 0.2s ease, background 0.2s ease;
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: calc(4 * var(--s)) calc(4 * var(--s)) 0px #000000;
+  border-radius: 0px;
+  font-family: var(--font-nav, sans-serif);
+  font-size: max(calc(12 * var(--s)), 11px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.2s ease;
 }
 
 .card-pill-tag:hover {
-  background: #f8f8f8;
-  transform: translateX(2px);
+  background: #fef08a; /* Vibrant energetic yellow accent on hover */
+  transform: translate(-2px, -2px);
+  box-shadow: calc(6 * var(--s)) calc(6 * var(--s)) 0px #000000;
 }
 
 .card-pill-tag svg {
@@ -228,63 +237,90 @@ body.studio-body {
 }
 
 .card-pill-tag:hover svg {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
-.card-caption-hover {
+/* Neo-Brutalist Slide-Up Metadata Banner on Hover */
+.card-caption-banner {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 40%);
-  opacity: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000000;
+  color: #ffffff;
+  padding: calc(10 * var(--s)) calc(14 * var(--s));
   display: flex;
-  align-items: flex-end;
-  padding: 16px;
-  transition: opacity 0.3s ease;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono, monospace);
+  font-size: max(calc(11 * var(--s)), 10px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 2px solid #000000;
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 7;
   pointer-events: none;
 }
 
-.card-caption-hover span {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+.gallery-card:hover .card-caption-banner {
+  transform: translateY(0);
 }
 
-.gallery-card:hover .card-caption-hover {
-  opacity: 1;
+.card-caption-banner .banner-category {
+  color: #e5e5e5;
+}
+
+.card-caption-banner .banner-arrow {
+  color: #fef08a;
 }
 
 /* ==========================================================================
-   4. Mobile & Tablet Responsiveness
+   Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 1200px) {
   .studio-gallery-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .gallery-col {
+    gap: 20px;
+  }
+  .gallery-filter-tags {
+    display: none;
   }
 }
 
 @media (max-width: 768px) {
-  .studio-header {
-    padding: 0 16px;
+  body.studio-gallery-page {
+    padding-top: calc(var(--nav-height) + 20px);
   }
   .studio-main {
-    padding: 12px 16px 40px;
+    padding: 0 16px;
   }
-  .studio-nav-links {
-    display: none;
+  .gallery-intro-banner {
+    padding: 0 16px 16px;
   }
   .studio-gallery-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 16px;
   }
   .gallery-col {
-    gap: 8px;
+    gap: 16px;
+  }
+  .gallery-card {
+    box-shadow: 6px 6px 0px #000000;
+    border-width: 2px;
+  }
+  .gallery-card:hover {
+    box-shadow: 8px 8px 0px #000000;
   }
 }
 
 @media (max-width: 480px) {
   .studio-gallery-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }

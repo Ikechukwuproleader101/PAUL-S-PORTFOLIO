@@ -229,6 +229,7 @@ async function init() {
   let wheelScaleCleanup = null;
   let aboutCleanup = null;
   let cameraCardsCleanup = null;
+  let architecturalCleanup = null;
   let footerCleanup = null;
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     playEntrance();
@@ -236,6 +237,7 @@ async function init() {
     wheelScaleCleanup = initWheelScale();
     aboutCleanup = initAbout();
     cameraCardsCleanup = initCameraCards();
+    architecturalCleanup = initArchitecturalSection();
     footerCleanup = initFooter();
   });
 
@@ -243,6 +245,7 @@ async function init() {
     if (wheelScaleCleanup) wheelScaleCleanup();
     if (aboutCleanup) aboutCleanup();
     if (cameraCardsCleanup) cameraCardsCleanup();
+    if (architecturalCleanup) architecturalCleanup();
     if (footerCleanup) footerCleanup();
     gsap.set(['.hero-bg', '.hero-portrait', '.px', '.nav'], { clearProps: 'all' });
     document.querySelector('.shelf')?.classList.add('is-in');
@@ -251,6 +254,10 @@ async function init() {
     if (cameraRoot) {
       buildWheels(cameraRoot);
       cameraRoot.classList.add('is-ready', 'is-in');
+    }
+    const agRoot = document.querySelector('.ag-hero');
+    if (agRoot) {
+      agRoot.classList.add('is-ready', 'is-done');
     }
     const foot = document.querySelector('.foot');
     if (foot) {
@@ -275,6 +282,7 @@ async function init() {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
       playEntrance();
+      if (architecturalReplay) architecturalReplay();
     });
   });
 
@@ -732,6 +740,166 @@ function enableCameraParallax(root) {
     cx(nx * 16 * S()); cy(ny * 10 * S());
     kx(nx * -12 * S()); ky(ny * -8 * S());
   });
+}
+
+// ==========================================================================
+// 7. Section 6: Architectural Assembly Section (GSAP)
+// Matches Desktop - 7.png & antigravity_gsap_section_brief.md
+// ==========================================================================
+let architecturalTimeline = null;
+export let architecturalReplay = null;
+
+export function initArchitecturalSection() {
+  const root = document.querySelector('[data-hero-section]');
+  if (!root) return () => {};
+
+  const panels = {
+    upperLeft: root.querySelector('[data-hero-panel="upper-left"]'),
+    upperMiddle: root.querySelector('[data-hero-panel="upper-middle"]'),
+    upperRight: root.querySelector('[data-hero-panel="upper-right"]'),
+    leftMiddle: root.querySelector('[data-hero-panel="left-middle"]'),
+    central1: root.querySelector('[data-hero-panel="central-1"]'),
+    central2: root.querySelector('[data-hero-panel="central-2"]'),
+    rightSide: root.querySelector('[data-hero-panel="right-side"]'),
+    lowerLeft: root.querySelector('[data-hero-panel="lower-left"]'),
+  };
+  const camera = root.querySelector('[data-hero-image]');
+  const allPanelEls = Object.values(panels).filter(Boolean);
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    root.classList.add('is-ready', 'is-done');
+    return () => {};
+  }
+
+  // Progressive enhancement: set initial states
+  gsap.set(allPanelEls, {
+    clipPath: 'inset(0% 100% 0% 0%)',
+    autoAlpha: 1,
+  });
+
+  if (camera) {
+    gsap.set(camera, {
+      y: 24 * S(),
+      scale: 0.985,
+      autoAlpha: 0,
+      transformOrigin: '0% 100%',
+    });
+  }
+
+  root.classList.add('is-ready');
+
+  function buildTimeline() {
+    if (architecturalTimeline) {
+      architecturalTimeline.kill();
+    }
+
+    const tl = gsap.timeline({
+      paused: true,
+      defaults: { ease: 'power3.out' },
+      onComplete() {
+        root.classList.add('is-done');
+        // Clear clip-path after entrance so that edges stay pristine
+        gsap.set(allPanelEls, { clearProps: 'clipPath' });
+        if (camera) {
+          gsap.set(camera, { clearProps: 'transform,scale' });
+        }
+      },
+    });
+
+    architecturalTimeline = tl;
+
+    // Timing map:
+    // Upper-left: 0.00s, duration 0.55s
+    if (panels.upperLeft) {
+      tl.to(panels.upperLeft, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.out' }, 0.00);
+    }
+
+    // Upper-middle: 0.07s, duration 0.58s
+    if (panels.upperMiddle) {
+      tl.to(panels.upperMiddle, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.58, ease: 'power3.out' }, 0.07);
+    }
+
+    // Upper-right: 0.14s, duration 0.55s
+    if (panels.upperRight) {
+      tl.to(panels.upperRight, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.out' }, 0.14);
+    }
+
+    // Large left-middle: 0.20s, duration 0.65s
+    if (panels.leftMiddle) {
+      tl.to(panels.leftMiddle, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.65, ease: 'power3.out' }, 0.20);
+    }
+
+    // Central panels: 0.27s onward, 0.50-0.60s
+    if (panels.central1) {
+      tl.to(panels.central1, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55, ease: 'power3.out' }, 0.27);
+    }
+    if (panels.central2) {
+      tl.to(panels.central2, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.50, ease: 'power3.out' }, 0.34);
+    }
+
+    // Right-side: 0.32s, duration 0.65s
+    if (panels.rightSide) {
+      tl.to(panels.rightSide, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.65, ease: 'power3.out' }, 0.32);
+    }
+
+    // Lower-left panel: 0.38s, duration 0.60s
+    if (panels.lowerLeft) {
+      tl.to(panels.lowerLeft, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.60, ease: 'power3.out' }, 0.38);
+    }
+
+    // Camera image: 0.52s, duration 0.80s (Opacity + 24px upward settle + subtle scale)
+    if (camera) {
+      tl.to(
+        camera,
+        {
+          y: 0,
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.80,
+          ease: 'power2.out',
+        },
+        0.52
+      );
+    }
+
+    return tl;
+  }
+
+  const tl = buildTimeline();
+
+  let hasEntered = false;
+  function play() {
+    if (hasEntered) return;
+    hasEntered = true;
+    io.disconnect();
+    tl.play();
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        play();
+      }
+    },
+    { threshold: 0.2 }
+  );
+  io.observe(root);
+
+  architecturalReplay = () => {
+    hasEntered = true;
+    root.classList.remove('is-done');
+    gsap.set(allPanelEls, { clipPath: 'inset(0% 100% 0% 0%)', autoAlpha: 1 });
+    if (camera) {
+      gsap.set(camera, { y: 24 * S(), scale: 0.985, autoAlpha: 0 });
+    }
+    const replayTl = buildTimeline();
+    replayTl.play();
+  };
+
+  return () => {
+    io.disconnect();
+    if (architecturalTimeline) architecturalTimeline.kill();
+  };
 }
 
 // ==========================================================================

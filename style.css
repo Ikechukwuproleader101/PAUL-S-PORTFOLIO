@@ -1071,6 +1071,203 @@ body {
 }
 
 /* ==========================================================================
+   Section 6: Architectural Assembly Section (GSAP)
+   Matches Desktop - 7.png & antigravity_gsap_section_brief.md
+   ========================================================================== */
+.ag-hero {
+  --ag-red: var(--color-red, #b50c0c);
+  position: relative;
+  width: 100%;
+  min-height: calc(1024 * var(--s));
+  background-color: var(--ag-red);
+  overflow: hidden;
+}
+
+.ag-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--ag-red);
+  z-index: 1;
+}
+
+.ag-stage {
+  position: relative;
+  width: 100%;
+  height: calc(1024 * var(--s));
+  margin: 0;
+  z-index: 2;
+}
+
+/* Individual Panel Styling */
+.ag-panel {
+  position: absolute;
+  overflow: visible;
+  will-change: clip-path, transform, opacity;
+}
+
+.ag-panel-shadow {
+  position: absolute;
+  background-color: #000000;
+  inset: 0;
+  transform: translate(var(--shadow-x, calc(12 * var(--s))), var(--shadow-y, calc(10 * var(--s))));
+}
+
+.ag-panel-face {
+  position: absolute;
+  inset: 0;
+  background-color: #ffffff;
+  border: max(1px, calc(1.5 * var(--s))) solid #000000;
+  box-sizing: border-box;
+}
+
+/* 1. Upper-Left Panel (x=0, y=20, w=484, h=295) */
+.ag-panel--upper-left {
+  left: 0;
+  top: calc(20 * var(--s));
+  width: calc(484 * var(--s));
+  height: calc(295 * var(--s));
+  --shadow-x: calc(12 * var(--s));
+  --shadow-y: calc(11 * var(--s));
+  z-index: 2;
+}
+
+/* 2. Upper-Middle Stepped Panel (x=506, y=20, w=588, h=380) */
+.ag-panel--upper-middle {
+  left: calc(506 * var(--s));
+  top: calc(20 * var(--s));
+  width: calc(588 * var(--s));
+  height: calc(380 * var(--s));
+  z-index: 2;
+}
+
+.ag-stepped-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* 3. Upper-Right Panel (x=1095, y=19, w=192, h=300) */
+.ag-panel--upper-right {
+  left: calc(1095 * var(--s));
+  top: calc(19 * var(--s));
+  width: calc(192 * var(--s));
+  height: calc(300 * var(--s));
+  --shadow-x: calc(10 * var(--s));
+  --shadow-y: calc(3 * var(--s));
+  z-index: 2;
+}
+
+/* 4. Large Left-Middle Panel (x=0, y=334, w=628, h=305) */
+.ag-panel--left-middle {
+  left: 0;
+  top: calc(334 * var(--s));
+  width: calc(628 * var(--s));
+  height: calc(305 * var(--s));
+  --shadow-x: calc(11 * var(--s));
+  --shadow-y: calc(10 * var(--s));
+  z-index: 2;
+}
+
+/* 5. Central Upper Panel (x=650, y=409, w=265, h=328) */
+.ag-panel--central-1 {
+  left: calc(650 * var(--s));
+  top: calc(409 * var(--s));
+  width: calc(265 * var(--s));
+  height: calc(328 * var(--s));
+  --shadow-x: calc(11 * var(--s));
+  --shadow-y: calc(11 * var(--s));
+  z-index: 2;
+}
+
+/* 6. Right-Side Panel (x=928, y=328, w=355, h=549) */
+.ag-panel--right-side {
+  left: calc(928 * var(--s));
+  top: calc(328 * var(--s));
+  width: calc(355 * var(--s));
+  height: calc(549 * var(--s));
+  --shadow-x: calc(14 * var(--s));
+  --shadow-y: calc(5 * var(--s));
+  z-index: 2;
+}
+
+/* 7. Lower-Left Panel (x=0, y=650, w=636, h=234) */
+.ag-panel--lower-left {
+  left: 0;
+  top: calc(650 * var(--s));
+  width: calc(636 * var(--s));
+  height: calc(234 * var(--s));
+  --shadow-x: calc(10 * var(--s));
+  --shadow-y: calc(1 * var(--s));
+  z-index: 2;
+}
+
+/* 8. Central Lower Panel (x=649, y=752, w=267, h=130) */
+.ag-panel--central-2 {
+  left: calc(649 * var(--s));
+  top: calc(752 * var(--s));
+  width: calc(267 * var(--s));
+  height: calc(130 * var(--s));
+  --shadow-x: calc(10 * var(--s));
+  --shadow-y: calc(2 * var(--s));
+  z-index: 2;
+}
+
+/* Camera Anchor Image (x=0, y=580, w=656, h=445) */
+.ag-camera-wrapper {
+  position: absolute;
+  left: 0;
+  top: calc(580 * var(--s));
+  width: calc(656 * var(--s));
+  height: calc(445 * var(--s));
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform, opacity;
+}
+
+.ag-camera-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+/* Progressive enhancement: hide panels before JS animation runs */
+.js .ag-hero:not(.is-ready) [data-hero-panel],
+.js .ag-hero:not(.is-ready) [data-hero-image] {
+  visibility: hidden;
+}
+
+.ag-hero.is-ready [data-hero-panel],
+.ag-hero.is-ready [data-hero-image],
+.ag-hero.is-done [data-hero-panel],
+.ag-hero.is-done [data-hero-image] {
+  visibility: visible;
+}
+
+/* Responsive Scaling: keep exact layout without overflow */
+@media (max-width: 900px) {
+  .ag-hero {
+    min-height: calc(1024 * var(--s));
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .ag-hero [data-hero-panel],
+  .ag-hero [data-hero-image] {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
    Footer Spec: "Print Run" (GSAP)
    Matches Desktop - 8.png & footer-spec.md
    ========================================================================== */

@@ -1191,14 +1191,14 @@ body {
   z-index: 2;
 }
 
-/* 7. Lower-Left Panel (x=0, y=650, w=636, h=234) */
+/* 7. Lower-Left Panel (x=0, y=650, w=633, h=232) */
 .ag-panel--lower-left {
   left: 0;
   top: calc(650 * var(--s));
-  width: calc(636 * var(--s));
-  height: calc(234 * var(--s));
+  width: calc(633 * var(--s));
+  height: calc(232 * var(--s));
   --shadow-x: calc(10 * var(--s));
-  --shadow-y: calc(1 * var(--s));
+  --shadow-y: calc(2 * var(--s));
   z-index: 2;
 }
 
@@ -1213,38 +1213,13 @@ body {
   z-index: 2;
 }
 
-/* Camera Anchor Image (x=0, y=580, w=656, h=445) */
-.ag-camera-wrapper {
-  position: absolute;
-  left: 0;
-  top: calc(580 * var(--s));
-  width: calc(656 * var(--s));
-  height: calc(445 * var(--s));
-  z-index: 10;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  will-change: transform, opacity;
-}
-
-.ag-camera-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: left bottom;
-}
-
 /* Progressive enhancement: hide panels before JS animation runs */
-.js .ag-hero:not(.is-ready) [data-hero-panel],
-.js .ag-hero:not(.is-ready) [data-hero-image] {
+.js .ag-hero:not(.is-ready) [data-hero-panel] {
   visibility: hidden;
 }
 
 .ag-hero.is-ready [data-hero-panel],
-.ag-hero.is-ready [data-hero-image],
-.ag-hero.is-done [data-hero-panel],
-.ag-hero.is-done [data-hero-image] {
+.ag-hero.is-done [data-hero-panel] {
   visibility: visible;
 }
 
@@ -1257,8 +1232,7 @@ body {
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .ag-hero [data-hero-panel],
-  .ag-hero [data-hero-image] {
+  .ag-hero [data-hero-panel] {
     clip-path: none !important;
     transform: none !important;
     opacity: 1 !important;

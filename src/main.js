@@ -760,7 +760,6 @@ export function initArchitecturalSection() {
     rightSide: root.querySelector('[data-hero-panel="right-side"]'),
     lowerLeft: root.querySelector('[data-hero-panel="lower-left"]'),
   };
-  const camera = root.querySelector('[data-hero-image]');
   const allPanelEls = Object.values(panels).filter(Boolean);
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -773,15 +772,6 @@ export function initArchitecturalSection() {
     clipPath: 'inset(0% 100% 0% 0%)',
     autoAlpha: 1,
   });
-
-  if (camera) {
-    gsap.set(camera, {
-      y: 24 * S(),
-      scale: 0.985,
-      autoAlpha: 0,
-      transformOrigin: '0% 100%',
-    });
-  }
 
   root.classList.add('is-ready');
 
@@ -797,9 +787,6 @@ export function initArchitecturalSection() {
         root.classList.add('is-done');
         // Clear clip-path after entrance so that edges stay pristine
         gsap.set(allPanelEls, { clearProps: 'clipPath' });
-        if (camera) {
-          gsap.set(camera, { clearProps: 'transform,scale' });
-        }
       },
     });
 
@@ -844,21 +831,6 @@ export function initArchitecturalSection() {
       tl.to(panels.lowerLeft, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.60, ease: 'power3.out' }, 0.38);
     }
 
-    // Camera image: 0.52s, duration 0.80s (Opacity + 24px upward settle + subtle scale)
-    if (camera) {
-      tl.to(
-        camera,
-        {
-          y: 0,
-          scale: 1,
-          autoAlpha: 1,
-          duration: 0.80,
-          ease: 'power2.out',
-        },
-        0.52
-      );
-    }
-
     return tl;
   }
 
@@ -886,9 +858,6 @@ export function initArchitecturalSection() {
     hasEntered = true;
     root.classList.remove('is-done');
     gsap.set(allPanelEls, { clipPath: 'inset(0% 100% 0% 0%)', autoAlpha: 1 });
-    if (camera) {
-      gsap.set(camera, { y: 24 * S(), scale: 0.985, autoAlpha: 0 });
-    }
     const replayTl = buildTimeline();
     replayTl.play();
   };

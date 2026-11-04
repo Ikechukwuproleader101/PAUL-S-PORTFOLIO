@@ -1094,10 +1094,10 @@ body {
 }
 
 /* ==========================================================================
-   Section 6: Architectural Assembly Section (GSAP)
-   Matches Desktop - 7.png & antigravity_gsap_section_brief.md
+   Section 6: Selected Works (Neo-Brutalist Wall)
+   Matches Desktop - 8 Reference & Black Brutalism Style
    ========================================================================== */
-.ag-hero {
+.ag-hero.works-wall {
   --ag-red: var(--color-red, #b50c0c);
   position: relative;
   width: 100%;
@@ -1106,245 +1106,138 @@ body {
   overflow: hidden;
 }
 
-.ag-bg {
-  position: absolute;
-  inset: 0;
-  background-color: var(--ag-red);
-  z-index: 1;
-}
-
-.ag-stage {
+.works-stage {
   position: relative;
   width: 100%;
   height: calc(1024 * var(--s));
-  margin: 0;
-  z-index: 2;
+  background-color: var(--ag-red);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Individual Panel Styling */
-.ag-panel {
+/* 3-Row Staggered Brick Grid matching Desktop - 8 exact coordinates */
+.works-row {
   position: absolute;
-  overflow: visible;
+  left: 0;
+  width: 100%;
+  height: 28.4%;
+  display: flex;
+}
+
+.works-row--1 {
+  top: 2.47%;
+  gap: 1.96%;
+  padding-left: 1.31%;
+  padding-right: 0;
+}
+
+.works-row--2 {
+  top: 33.95%;
+  gap: 1.74%;
+  padding-left: 1.09%;
+  padding-right: 0;
+}
+
+.works-row--3 {
+  top: 64.51%;
+  gap: 1.09%;
+  padding-left: 1.09%;
+  padding-right: 0;
+}
+
+/* Individual box widths matching reference brick distribution */
+.works-row--1 .works-brick:nth-child(1) { flex: 0 0 32.68%; }
+.works-row--1 .works-brick:nth-child(2) { flex: 0 0 32.90%; }
+.works-row--1 .works-brick:nth-child(3) { flex: 1 1 0; margin-right: calc(-8 * var(--s)); }
+
+.works-row--2 .works-brick:nth-child(1) { flex: 0 0 24.40%; }
+.works-row--2 .works-brick:nth-child(2) { flex: 0 0 32.90%; }
+.works-row--2 .works-brick:nth-child(3) { flex: 0 0 32.90%; }
+.works-row--2 .works-brick:nth-child(4) { flex: 1 1 0; margin-right: calc(-8 * var(--s)); }
+
+.works-row--3 .works-brick:nth-child(1) { flex: 0 0 32.90%; }
+.works-row--3 .works-brick:nth-child(2) { flex: 0 0 32.90%; }
+.works-row--3 .works-brick:nth-child(3) { flex: 1 1 0; margin-right: calc(-8 * var(--s)); }
+
+/* The Brutalist Brick Card */
+.works-brick {
+  position: relative;
+  height: 100%;
+  cursor: default;
   will-change: clip-path, transform, opacity;
 }
 
-.ag-panel-shadow {
+.works-brick-shadow {
   position: absolute;
+  inset: 0;
   background-color: #000000;
-  inset: 0;
-  transform: translate(var(--shadow-x, calc(12 * var(--s))), var(--shadow-y, calc(10 * var(--s))));
+  transform: translate(calc(10 * var(--s)), calc(10 * var(--s)));
 }
 
-.ag-panel-face {
-  position: absolute;
-  inset: 0;
-  background-color: #ffffff;
-  border: max(1px, calc(1.5 * var(--s))) solid #000000;
-  box-sizing: border-box;
-}
-
-/* 1. Upper-Left Panel (x=0, y=20, w=484, h=295) */
-.ag-panel--upper-left {
-  left: 0;
-  top: calc(20 * var(--s));
-  width: calc(484 * var(--s));
-  height: calc(295 * var(--s));
-  --shadow-x: calc(12 * var(--s));
-  --shadow-y: calc(11 * var(--s));
-  z-index: 2;
-}
-
-/* 2. Upper-Middle Stepped Panel (x=506, y=20, w=588, h=380) */
-.ag-panel--upper-middle {
-  left: calc(506 * var(--s));
-  top: calc(20 * var(--s));
-  width: calc(588 * var(--s));
-  height: calc(380 * var(--s));
-  z-index: 2;
-}
-
-.ag-stepped-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* 3. Upper-Right Panel (x=1095, y=19, w=192, h=300) */
-.ag-panel--upper-right {
-  left: calc(1095 * var(--s));
-  top: calc(19 * var(--s));
-  width: calc(192 * var(--s));
-  height: calc(300 * var(--s));
-  --shadow-x: calc(10 * var(--s));
-  --shadow-y: calc(3 * var(--s));
-  z-index: 2;
-}
-
-/* 4. Large Left-Middle Panel (x=0, y=334, w=628, h=305) */
-.ag-panel--left-middle {
-  left: 0;
-  top: calc(334 * var(--s));
-  width: calc(628 * var(--s));
-  height: calc(305 * var(--s));
-  --shadow-x: calc(11 * var(--s));
-  --shadow-y: calc(10 * var(--s));
-  z-index: 2;
-}
-
-/* 5. Central Upper Panel (x=650, y=409, w=265, h=328) */
-.ag-panel--central-1 {
-  left: calc(650 * var(--s));
-  top: calc(409 * var(--s));
-  width: calc(265 * var(--s));
-  height: calc(328 * var(--s));
-  --shadow-x: calc(11 * var(--s));
-  --shadow-y: calc(11 * var(--s));
-  z-index: 2;
-}
-
-/* 6. Right-Side Panel (x=928, y=328, w=355, h=549) */
-.ag-panel--right-side {
-  left: calc(928 * var(--s));
-  top: calc(328 * var(--s));
-  width: calc(355 * var(--s));
-  height: calc(549 * var(--s));
-  --shadow-x: calc(14 * var(--s));
-  --shadow-y: calc(5 * var(--s));
-  z-index: 2;
-}
-
-/* 7. Lower-Left Panel (x=0, y=650, w=633, h=232) */
-.ag-panel--lower-left {
-  left: 0;
-  top: calc(650 * var(--s));
-  width: calc(633 * var(--s));
-  height: calc(232 * var(--s));
-  --shadow-x: calc(10 * var(--s));
-  --shadow-y: calc(2 * var(--s));
-  z-index: 2;
-}
-
-/* 8. Central Lower Panel (x=649, y=752, w=267, h=130) */
-.ag-panel--central-2 {
-  left: calc(649 * var(--s));
-  top: calc(752 * var(--s));
-  width: calc(267 * var(--s));
-  height: calc(130 * var(--s));
-  --shadow-x: calc(10 * var(--s));
-  --shadow-y: calc(2 * var(--s));
-  z-index: 2;
-}
-
-/* Editorial Brand Typography: "MY WORKS" & Custom QR Code */
-.ag-text-horizontal {
-  position: absolute;
-  left: calc(680 * var(--s));
-  top: calc(900 * var(--s));
-  height: calc(96 * var(--s));
+.works-brick-face {
+  position: relative;
   display: flex;
-  align-items: center;
-  z-index: 5;
-  pointer-events: none;
-  user-select: none;
-  will-change: transform, opacity;
-}
-
-.ag-works-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: calc(84 * var(--s));
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.ag-text-vertical {
-  position: absolute;
-  left: calc(1332 * var(--s));
-  top: calc(860 * var(--s));
-  transform-origin: 0 0;
-  transform: rotate(-90deg);
-  z-index: 5;
-  pointer-events: none;
-  user-select: none;
-  will-change: transform, opacity;
-}
-
-.ag-works-vertical-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: calc(84 * var(--s));
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  line-height: 1;
-  white-space: nowrap;
-  display: block;
-}
-
-.ag-qr-container {
-  position: absolute;
-  left: calc(1324 * var(--s));
-  top: calc(908 * var(--s));
-  width: calc(90 * var(--s));
-  height: calc(90 * var(--s));
-  background-color: #ffffff;
-  padding: calc(3 * var(--s));
-  box-sizing: border-box;
-  z-index: 5;
-  pointer-events: auto;
-  cursor: pointer;
-  will-change: transform, opacity;
-}
-
-.ag-qr-img {
-  display: block;
+  flex-direction: column;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  user-select: none;
-  -webkit-user-drag: none;
+  background-color: #ffffff;
+  border: max(1.5px, calc(2 * var(--s))) solid #000000;
+  padding: calc(16 * var(--s)) calc(20 * var(--s));
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Progressive enhancement: hide panels, text, and QR before JS animation runs */
-.js .ag-hero:not(.is-ready) [data-hero-panel],
-.js .ag-hero:not(.is-ready) [data-hero-text],
-.js .ag-hero:not(.is-ready) [data-hero-qr] {
+/* Neo-Brutalist Lift Interaction on Hover */
+@media (hover: hover) {
+  .works-brick:hover .works-brick-face {
+    transform: translate(calc(-4 * var(--s)), calc(-4 * var(--s)));
+  }
+}
+
+.brick-project-name {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: max(calc(16 * var(--s)), 12px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #111111;
+  line-height: 1.1;
+  user-select: none;
+}
+
+/* Bottom Baseline Red Strip matching Desktop - 8 footer label bar */
+.works-baseline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 7.1%;
+  background-color: var(--ag-red);
+}
+
+/* Progressive enhancement: hide bricks before JS animation runs */
+.js .ag-hero:not(.is-ready) .works-brick {
   visibility: hidden;
 }
 
-.ag-hero.is-ready [data-hero-panel],
-.ag-hero.is-ready [data-hero-text],
-.ag-hero.is-ready [data-hero-qr],
-.ag-hero.is-done [data-hero-panel],
-.ag-hero.is-done [data-hero-text],
-.ag-hero.is-done [data-hero-qr] {
+.ag-hero.is-ready .works-brick,
+.ag-hero.is-done .works-brick {
   visibility: visible;
 }
 
-/* Responsive Scaling: preserve exact desktop composition edge-to-edge on mobile */
+/* Mobile & Tablet Responsiveness */
 @media (max-width: 900px) {
-  .ag-hero {
+  .ag-hero.works-wall {
     --s: calc(100vw / var(--design-w));
     min-height: calc(1024 * var(--s));
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .ag-stage {
-    width: 100vw;
-    height: calc(1024 * var(--s));
   }
 }
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .ag-hero [data-hero-panel],
-  .ag-hero [data-hero-text],
-  .ag-hero [data-hero-qr] {
+  .ag-hero .works-brick {
     clip-path: none !important;
     transform: none !important;
     opacity: 1 !important;
